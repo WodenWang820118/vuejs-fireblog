@@ -1,24 +1,4 @@
 # vuejs-fireblog
 
-## Project setup
-```
-yarn install
-```
-
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## The file structure preference (make the components inside the parent component)
+https://stackoverflow.com/questions/61782533/vue-js-naming-conventions-children-of-single-instance-components
