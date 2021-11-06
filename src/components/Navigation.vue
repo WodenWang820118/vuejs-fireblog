@@ -1,4 +1,3 @@
-<!-- TODO: the 1 thing to work with -->
 <template>
   <header>
     <nav class="container">
@@ -11,12 +10,8 @@
         <ul v-show="!mobile">
           <router-link class="link" :to="{ name: 'Home' }">Home</router-link>
           <router-link class="link" :to="{ name: 'Blogs' }">Blogs</router-link>
-          <router-link class="link" :to="{ name: 'CreatePost' }"
-            >Create Post</router-link
-          >
-          <router-link v-if="!user" class="link" :to="{ name: 'Login' }"
-            >Login/Register</router-link
-          >
+          <router-link v-if="user_login" class="link" :to="{ name: 'CreatePost' }">Create Post </router-link>
+          <router-link v-if="!user_login" class="link" :to="{ name: 'Login' }">Login/Register </router-link>
         </ul>
         <div
           v-if="user"
@@ -46,13 +41,6 @@
                   <p>Profile</p>
                 </router-link>
               </div>
-              <!-- potentially by charged google -->
-              <!-- <div class="option">
-                <router-link class="option" :to="{ name: 'Admin' }">
-                  <img class="icon" src="@/assets/Icons/user-crown-light.svg" alt="" />
-                  <p>Admin</p>
-                </router-link>
-              </div> -->
               <div @click="signOut" class="option">
                 <img
                   class="icon"
@@ -79,12 +67,9 @@
       <ul class="mobile-nav" v-show="mobileNav">
         <router-link class="link" :to="{ name: 'Home' }">Home</router-link>
         <router-link class="link" :to="{ name: 'Blogs' }">Blogs</router-link>
-        <router-link v-if="user" class="link" :to="{ name: 'CreatePost' }"
-          >Create Post</router-link
+        <router-link v-if="user_login" class="link" :to="{ name: 'CreatePost' }">Create Post</router-link
         >
-        <router-link v-if="!user" class="link" :to="{ name: 'Login' }"
-          >Login/Register</router-link
-        >
+        <router-link v-if="!user_login" class="link" :to="{ name: 'Login' }">Login/Register</router-link>
       </ul>
     </transition>
   </header>
@@ -104,6 +89,11 @@ export default {
       mobileNav: null,
       windowWidth: null,
     };
+  },
+  props: {
+    user_login: {
+      type: Boolean,
+    },
   },
   created() {
     // when the screen size changes -> trigger the event -> call checkScreen

@@ -12,7 +12,11 @@ const state = {
   profileInitials: null,
 };
 
-const getters = {};
+const getters = {
+  profileEmail(state) {
+    return state.profileEmail;
+  },
+};
 
 const actions = {
   async getCurrentUser({ commit }) {

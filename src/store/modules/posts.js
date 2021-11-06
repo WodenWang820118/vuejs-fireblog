@@ -24,6 +24,7 @@ const getters = {
     return state.blogPosts;
   },
   editPost: (state) => state.editPost,
+  postLoaded: (state) => state.postLoaded,
 };
 
 const actions = {
@@ -57,8 +58,8 @@ const actions = {
       .collection("blogPosts")
       .orderBy("blogDate", "desc");
     const dbResults = await dataBase.get();
-    console.log("[Connect and get the blog posts data]");
-    console.log(dbResults + "from [blogPosts.js]");
+    // console.log("[Connect and get the blog posts data]");
+    // console.log(dbResults + "from [blogPosts.js]");
     if (dbResults) {
       commit("setPost", dbResults);
       return;
@@ -95,7 +96,7 @@ const mutations = {
     state.blogPhotoPreview = !state.blogPhotoPreview;
   },
   setPost(state, dbCollection) {
-    console.log(dbCollection);
+    // console.log(dbCollection);
     dbCollection.forEach((doc) => {
       const data = {
         blogId: doc.data().blogId,
@@ -106,7 +107,7 @@ const mutations = {
         blogCoverPhotoName: doc.data().blogCoverPhotoName,
       };
       state.blogPosts.push(data);
-      console.log(`The updated blog posts: ${state.blogPosts}`);
+      // console.log(`The updated blog posts: ${state.blogPosts}`);
     });
     state.postLoaded = true;
   },

@@ -1,10 +1,12 @@
-import { createApp } from "vue";
+import {
+  createApp
+} from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import { sync } from 'vuex-router-sync'
-// find a alternative for vue2-editor
-// the vue2-editor is used for the blog content modification
+import {
+  sync
+} from 'vuex-router-sync'
 import db from "./firebase/firebaseInit"; // the configuration data
 import firebase from "firebase/app"; // for using the firebase services (web only)
 import "firebase/auth"; // for using the auth()
@@ -17,6 +19,7 @@ import githubTheme from "@kangc/v-md-editor/lib/theme/github.js";
 import "@kangc/v-md-editor/lib/theme/style/github.css";
 
 // Resources for the codemirror editor
+// used by VMdEditor
 import Codemirror from "codemirror";
 // mode
 import "codemirror/mode/markdown/markdown";
@@ -44,16 +47,12 @@ VMdEditor.Codemirror = Codemirror;
 VMdEditor.use(githubTheme);
 VMdEditor.lang.use("en-US", enUS);
 
-// puzzle here..
-// don't know how it works, but it works
-// console.log("<1> try to print the apps.length to see if firebase activated")
 if (firebase.apps.length > 0 && db) {
   console.log("The firebase activated");
 } else {
   console.log("The firebase failed");
 }
 
-// console.log("<2> No matter what, create the vue app")
 // reference: https://www.npmjs.com/package/vuex-router-sync
 sync(store, router)
 createApp(App).use(VMdEditor).use(router).use(store).mount("#app");

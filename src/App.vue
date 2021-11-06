@@ -1,9 +1,10 @@
 <template>
   <div class="app-wrapper">
+    <!-- provide the router view only if posts are loaded -->
     <div class="app" v-if="postLoaded">
-      <Navigation v-if="!navigation" />
-      <router-view />
-      <Footer v-if="!navigation" />
+      <Navigation :user_login="user_login" />
+        <router-view />
+      <Footer v-if="!user_login" />
     </div>
   </div>
 </template>
@@ -11,7 +12,8 @@
 <script>
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { mapState, mapActions } from "vuex";
+import { ref, onMounted, computed } from "vue";
+import { useStore } from 'vuex'
 import firebase from "firebase/app"; // for using the firebase namespace
 import "firebase/auth"; // for initilize the auth() as a function -> reference: https://stackoverflow.com/questions/48592656/firebase-auth-is-not-a-function
 
@@ -21,41 +23,33 @@ export default {
     Navigation,
     Footer,
   },
-  data() {
-    return {
-      navigation: null,
-      user: null,
-    };
-  },
-  created() {
-    this.checkRoute();
-    this.checkUserState();
-    this.getPost(); // since instantiating the app, the data should be the lastest; when developing, the page would hot-update
-    // if put getPost() when routing to the Home and Blogs?
-  },
-  mounted() {},
-  // usage reference: https://bit.ly/3rtLTW6
-  // renaming the methods to use "this.method()" form
-  methods: {
-    ...mapActions("users", {
-      getCurrentUser: "getCurrentUser",
-      mountUser: "mountUser",
-    }),
-    ...mapActions("posts", {
-      getPost: "getPost",
-    }),
-    checkRoute() {
-      if (
-        this.$route.name === "Login" ||
-        this.$route.name === "Register" ||
-        this.$route.name === "ForgotPassword"
-      ) {
-        this.navigation = true;
-        return;
-      }
-      this.navigation = false;
-    },
-    checkUserState() {
+  setup() {
+    // composition api, useStore with vuex
+    const store = useStore();
+
+    // composition api, use ref
+    var user_login = ref(null);
+ 
+    // dispatched, or committed method from store
+
+    const getCurrentUser = () => {
+      return store.dispatch('users/getCurrentUser')
+    }
+
+    const mountUser = (user) => {
+      return store.dispatch('users/mountUser', user)
+    }
+
+    const getPost = () => {
+      return store.dispatch('posts/getPost')
+    }
+
+    // the functions used in this view
+
+    /**
+     * The function check if any user logged in
+     */
+    function checkUserState() {
       // offical recommended way to fire the methods after the user state changes
       // otherwise, could be null
       firebase.auth().onAuthStateChanged((user) => {
@@ -63,23 +57,35 @@ export default {
           // User is signed in, see docs for a list of available properties
           // https://firebase.google.com/docs/reference/js/firebase.User
           // var email = user.email
-          console.log("The user signed in!");
           // console.log(`The user email: ${email}`)
-          this.user = this.mountUser(user);
-          this.getCurrentUser();
+          console.log("The user signed in!");
+          user = mountUser(user);
+          getCurrentUser();
+          user_login.value = true;
         } else {
+          user_login.value = false;
           console.log("There is no user using right now");
         }
       });
-    },
-  },
-  computed: {
-    ...mapState("users", ["profileEmail"]),
-    ...mapState("posts", ["postLoaded"]),
+    }
+
+    // define the behaviors of the view
+    onMounted(() => {
+      checkUserState();
+      getPost()
+    });
+
+    // the return here returns the functions that are used in the template
+    return {
+      profileEmail: computed(() => store.getters['users/profileEmail']),
+      postLoaded: computed(() => store.getters['posts/postLoaded']),
+      user_login,
+    };
   },
   watch: {
-    $route() {
-      this.checkRoute();
+    user_login(val) {
+      console.log(`The user_login value is changed to ${val}`);
+      this.user_login = val;
     },
   },
 };
