@@ -1,3 +1,4 @@
+// TODO: refactor to composition api
 <template>
   <header>
     <nav class="container">
