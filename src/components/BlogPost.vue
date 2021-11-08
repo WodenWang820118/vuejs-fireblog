@@ -63,8 +63,9 @@ export default {
 .blog-wrapper {
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 10px 5% 1px 5%;
+  // box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  //   0 2px 4px -1px rgba(0, 0, 0, 0.06);
   @media (min-width: 700px) {
     min-height: 650px;
     max-height: 650px;
@@ -74,7 +75,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: left;
     flex: 4;
     order: 2;
     @media (min-width: 700px) {
@@ -146,6 +147,7 @@ export default {
       display: block;
       width: 100%;
       height: 100%;
+      border-radius: 5px;
       object-fit: cover;
     }
   }

@@ -29,7 +29,7 @@ export default {
 
     // composition api, use ref
     const user_login = ref(null);
-    const admin = ref(false);
+    const admin = ref(null);
 
     // dispatched, or committed method from store
 
@@ -57,9 +57,10 @@ export default {
         if (user) {
           // User is signed in, see docs for a list of available properties
           // https://firebase.google.com/docs/reference/js/firebase.User
-          var email = user.email
+          let email = user.email
           // console.log(`The user email: ${email}`)
-          email == process.env.ADMIN_EMAIL ? admin.value = true : admin.value = false
+          // console.log(`The admin email: ${process.env.VUE_APP_ADMINEMAIL}`)
+          email === process.env.VUE_APP_ADMINEMAIL ? admin.value = true : admin.value = false
           console.log("The user signed in!");
           user = mountUser(user);
           getCurrentUser();
@@ -91,6 +92,10 @@ export default {
     user_login(val) {
       console.log(`The user_login value is changed to ${val}`);
       this.user_login = val;
+    },
+    admin(val) {
+      console.log(`The admin value is changed to ${val}`);
+      this.admin = val;
     },
   },
 };

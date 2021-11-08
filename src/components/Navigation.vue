@@ -87,7 +87,7 @@ export default {
     const store = useStore();
 
     // the variables for adjusting the responsiiveness
-    const profileMenu =  ref(null);
+    const profileMenu =  ref(false);
     const mobile = ref(null); // true ? 'show icon' : '' -> can toggle mobileNav
     const mobileNav = ref(null);
     const windowWidth = ref(window.innerWidth);
@@ -120,7 +120,7 @@ export default {
      */
     function toggleProfileMenu(e) {
       if (e.target === profile.value) {
-        profileMenu.value = profileMenu;
+        profileMenu.value = !profileMenu.value;
       }
     }
 
@@ -168,7 +168,7 @@ export default {
 <style lang="scss" scoped>
 header {
   background-color: #fff;
-  padding: 0 25px;
+  padding: 0 1% 0 1%;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   z-index: 99;
@@ -182,7 +182,7 @@ header {
   }
   nav {
     display: flex;
-    padding: 25px 0;
+    padding: 25px 5%;
     .branding {
       display: flex;
       align-items: center;

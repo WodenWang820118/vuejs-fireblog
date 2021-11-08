@@ -1,3 +1,5 @@
+const Dotenv = require('dotenv-webpack');
+
 module.exports = {
   pluginOptions: {
     svg: {
@@ -6,5 +8,10 @@ module.exports = {
       sprite: {}, // Pass options to svg-sprite-loader
       external: {}, // Pass options to file-loader
     },
+  },
+  configureWebpack: {
+    plugins: [
+      new Dotenv(),
+    ],
   },
 };
