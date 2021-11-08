@@ -28,8 +28,8 @@ export default {
     const store = useStore();
 
     // composition api, use ref
-    var user_login = ref(null);
-    var admin = ref(false);
+    const user_login = ref(null);
+    const admin = ref(false);
 
     // dispatched, or committed method from store
 

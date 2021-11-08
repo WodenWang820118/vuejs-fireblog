@@ -13,8 +13,21 @@ const state = {
 };
 
 const getters = {
+  user: (state) => state.user,
   profileEmail(state) {
     return state.profileEmail;
+  },
+  profileFirstName(state) {
+    return state.profileFirstName;
+  },
+  profileLastName(state) {
+    return state.profileLastName;
+  },
+  profileUsername(state) {
+    return state.profileUsername;
+  },
+  profileInitials(state) {
+    return state.profileInitials;
   },
 };
 

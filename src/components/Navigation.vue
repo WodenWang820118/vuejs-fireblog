@@ -1,4 +1,3 @@
-// TODO: refactor to composition api
 <template>
   <header>
     <nav class="container">
@@ -77,64 +76,58 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { useStore } from "vuex";
+import { ref, computed } from "vue";
 import firebase from "firebase/app"; // for using the firebase namespace
 import "firebase/auth"; // for initilize the auth() as a function -> reference: https://stackoverflow.com/questions/48592656/firebase-auth-is-not-a-function
 export default {
   name: "Navigation",
-  components: {},
-  data() {
-    return {
-      profileMenu: null,
-      mobile: null, // true ? 'show icon' : '' -> can toggle mobileNav
-      mobileNav: null,
-      windowWidth: null,
-    };
-  },
-  props: {
-    user_login: {
-      type: Boolean,
-    },
-    admin: {
-      type: Boolean,
-    },
-  },
-  created() {
-    // when the screen size changes -> trigger the event -> call checkScreen
-    window.addEventListener("resize", this.checkScreen);
-    // the first time loading the app
-    this.checkScreen();
-  },
-  computed: {
-    ...mapState("users", [
-      "user",
-      "profileInitials",
-      "profileFirstName",
-      "profileLastName",
-      "profileUsername",
-      "profileEmail",
-    ]),
-  },
-  methods: {
-    checkScreen() {
-      this.windowWidth = window.innerWidth;
-      if (this.windowWidth <= 750) {
-        this.mobile = true;
+  setup() {
+    // get the store
+    const store = useStore();
+
+    // the variables for adjusting the responsiiveness
+    const profileMenu =  ref(null);
+    const mobile = ref(null); // true ? 'show icon' : '' -> can toggle mobileNav
+    const mobileNav = ref(null);
+    const windowWidth = ref(window.innerWidth);
+
+    // variable for rendering the profile
+    const profile = ref(null);
+
+    /**
+     * Check the the screen width to adjust the responsiiveness layout
+     */
+    function checkScreen() {
+      if (windowWidth.value <= 750) {
+        mobile.value = true; // for toggling mobile responsiveness and navigation
         return;
       }
-      this.mobile = false;
-      this.mobileNav = false;
+      mobile.value = false;
+      mobileNav.value = false;
       return;
-    },
-    toggleMobileNav() {
-      this.mobileNav = !this.mobileNav;
-    },
-    toggleProfileMenu(e) {
-      if (e.target === this.$refs.profile) {
-        this.profileMenu = !this.profileMenu;
+    }
+
+    /**
+     * Toggle the boolean value to dynamically adjust the responsiiveness navigation layout
+     */
+    function toggleMobileNav() {
+      mobileNav.value = !mobileNav.value;
+    }
+
+    /**
+     * get the initials of the user with dropdown menu
+     */
+    function toggleProfileMenu(e) {
+      if (e.target === profile.value) {
+        profileMenu.value = profileMenu;
       }
-    },
-    signOut() {
+    }
+
+    /**
+     * Sign out the user and reload the application
+     */
+    function signOut() {
       firebase
         .auth()
         .signOut()
@@ -143,6 +136,30 @@ export default {
           // alert("Hope to see you again")
         });
       window.location.reload();
+    }
+
+    window.addEventListener("resize", () => {
+      checkScreen();
+    });
+
+    return {
+      // store states
+      user: computed(() => store.getters["users/user"]),
+      profileInitials: computed(() => store.getters["users/profileInitials"]),
+      profileFirstName: computed(() => store.getters["users/profileFirstName"]),
+      profileLastName: computed(() => store.getters["users/profileLastName"]),
+      profileUsername: computed(() => store.getters["users/profileUsername"]),
+      profileEmail: computed(() => store.getters["users/profileEmail"]),
+      profileMenu, profile, mobile, mobileNav, windowWidth, // variables
+      toggleProfileMenu, toggleMobileNav, signOut // functions
+    }
+  },
+  props: {
+    user_login: {
+      type: Boolean,
+    },
+    admin: {
+      type: Boolean,
     },
   },
 };
