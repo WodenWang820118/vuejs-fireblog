@@ -12,36 +12,43 @@
 
 <script>
 import BlogCards from "@/components/BlogCards";
-import { mapState, mapActions } from "vuex";
-// import posts from "@/store/modules/posts";
+import { useStore } from "vuex";
+import { onBeforeUnmount, computed, ref } from "vue";
 
 export default {
   name: "Blogs",
-  data() {
-    return {
-      // blogPosts: [],
-    };
-  },
   components: {
     BlogCards,
   },
-  mounted() {
-    // console.log(store)
-  },
-  methods: {
-    ...mapActions("posts", ["toggleEditPost"]),
-    updEditPost(editPost) {
-      // and assign the opposite way to the variable for setting
-      // call the method from mapActions to change the state
-      editPost = !this.editPost;
-      this.toggleEditPost(editPost);
-    },
-  },
-  computed: {
-    ...mapState("posts", ["blogPosts", "editPost"]),
-  },
-  beforeUnmount() {
-    this.toggleEditPost(false);
+  setup() {
+    // state management
+    const store = useStore();
+    const editPost = computed(() => store.getters['posts/editPost']);
+    const edit = ref(null); // for toggle purpose
+
+    const toggleEditPost = (edit) => {
+      store.dispatch("posts/toggleEditPost", edit);
+    };
+
+    /**
+     * According to the state, reassign the local edit boolean to toggle the edit mode
+     */
+    function updEditPost(edit) {
+      edit.value = !editPost.value
+      console.log(edit.value)
+      toggleEditPost(edit.value)
+    }
+
+    onBeforeUnmount(() => {
+      // reset the state whenever leave the page
+      toggleEditPost(false)
+    });
+
+    return {
+      blogPosts: computed(() => store.getters['posts/blogPosts']),
+      editPost, edit,
+      updEditPost, toggleEditPost, 
+    }
   },
 };
 </script>
