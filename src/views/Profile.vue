@@ -124,6 +124,13 @@ export default {
     // wrapped in a object according to the category
     // to be organized and return the variables, functions, and computed properties
 
+    const storeComputed = {
+      profileInitials: computed(() => store.getters["users/profileInitials"]),
+      profileFirstName: computed(() => store.getters["users/profileFirstName"]),
+      profileLastName: computed(() => store.getters["users/profileLastName"]),
+      profileUsername: computed(() => store.getters["users/profileUsername"]),
+      profileEmail: computed(() => store.getters["users/profileEmail"]),
+    }
     const vars = {
       modalMessage,
       modalActive,
@@ -138,14 +145,6 @@ export default {
       updUsername,
       updateProfile,
       closeModal,
-    }
-
-    const storeComputed = {
-      profileInitials: computed(() => store.getters["users/profileInitials"]),
-      profileFirstName: computed(() => store.getters["users/profileFirstName"]),
-      profileLastName: computed(() => store.getters["users/profileLastName"]),
-      profileUsername: computed(() => store.getters["users/profileUsername"]),
-      profileEmail: computed(() => store.getters["users/profileEmail"]),
     }
 
     return {

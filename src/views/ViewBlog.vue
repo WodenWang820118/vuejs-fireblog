@@ -1,3 +1,4 @@
+// TODO: redo the viewBlog.vue since there has a function to get post
 <template>
   <div class="post-view" v-if="currentBlog">
     <div class="container quillWrapper">
