@@ -46,11 +46,6 @@ export default {
   },
   methods: {
     signIn() {
-      // TODO: could be probamatic if lots of users signing in at the same time
-      // TODO: persistent based on SESSION -> only persistent in current session and the tab is not closed
-      //  if(firebase.app()) {
-      //    console.log('the app is already initilized!!!!!!!!!!!!!!!!!!')
-      //  }
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)

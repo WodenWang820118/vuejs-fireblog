@@ -30,14 +30,14 @@ export default {
     const reload = ref(true);
 
     // access router
-    const router = useRoute();
+    const route = useRoute();
 
 
     /**
      * The function get the blog post using the default generaetd blogId by firebase
      */
     function getCertainPost() {
-      const docRef = db.collection("blogPosts").doc(router.params.blogId);
+      const docRef = db.collection("blogPosts").doc(route.params.blogId);
       docRef.get()
       .then((doc) => {
         doc.exists ? currentBlog.value = doc.data() : currentBlog.value = null;

@@ -14,6 +14,11 @@ const state = {
 };
 
 const getters = {
+  blogHTML: (state) => state.blogHTML,
+  blogTitle: (state) => state.blogTitle,
+  blogCoverPhotoName: (state) => state.blogCoverPhotoName,
+  blogPhotoFileURL: (state) => state.blogPhotoFileURL,
+  blogPhotoPreview: (state) => state.blogPhotoPreview,
   blogPostsFeed(state) {
     return state.blogPosts.slice(0, 2);
   },
