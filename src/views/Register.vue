@@ -2,7 +2,7 @@
   <div class="form-wrap">
     <form class="register">
       <p class="login-register">
-        Alread have an account?
+        Already have an account?
         <router-link class="router-link" :to="{ name: 'Login' }"
           >Login</router-link
         >
@@ -68,14 +68,10 @@ export default {
       ) {
         this.error = false;
         this.errorMsg = "";
-        // TODO: need to dive the firebase setting and see how to use its authentication and database
-        // original code from traversy tutorial
         const createUser = await firebase
-          .auth()
-          .createUserWithEmailAndPassword(this.email, this.password);
+                            .auth()
+                            .createUserWithEmailAndPassword(this.email, this.password);
         const result = await createUser;
-        // console.log(firebaseApp)
-        // const usersRef = firebaseApp.firestore().collection('users')
         const dataBase = db.collection("users").doc(result.user.uid);
         // create the schema here
         await dataBase.set({

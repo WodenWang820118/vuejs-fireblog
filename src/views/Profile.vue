@@ -56,101 +56,103 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { useStore } from "vuex";
+import { ref, computed } from "vue";
 import Modal from "@/components/Modal";
 export default {
   name: "Profile",
   components: {
     Modal,
   },
-  data() {
-    return {
-      modalMessage: "Changes were saved!",
-      modalActive: null,
-      wishedFirstName: "",
-      wishedLastName: "",
-      wishedUsername: "",
-    };
-  },
-  methods: {
-    ...mapActions("users", {
-      updFirstName: "updFirstName",
-      updLastName: "updLastName",
-      updUsername: "updUsername",
-      updUserSettings: "updUserSettings",
-    }),
-    updateProfile() {
+  setup() {
+    // variables
+    const modalMessage = ref("Changes were saved")
+    const modalActive = ref(null)
+    const wishedFirstName = ref("")
+    const wishedLastName = ref("")
+    const wishedUsername = ref("")
+
+    // state management
+    const store = useStore()
+
+    const updFirstName = (firstName) => {
+      return store.dispatch("users/updFirstName", firstName)
+    }
+
+    const updLastName = (lastName) => {
+      return store.dispatch("users/updLastName", lastName)
+    }
+
+    const updUsername = (userName) => {
+      return store.dispatch("users/updUsername", userName)
+    }
+
+    // functions
+
+    function updateProfile() {
       if (
-        this.wishedFirstName.length == 0 &&
-        this.wishedLastName.length == 0 &&
-        this.wishedUsername.length == 0
+        wishedFirstName.value.length == 0 &&
+        wishedLastName.value.length == 0 &&
+        wishedUsername.value.length == 0
       ) {
         alert("No field has changed");
         return;
       }
-      // debugging code
-      console.log(
-        "------------------------------------------------------------"
-      );
-      console.log("[Original state]");
-      console.log(`first name: ${this.profileFirstName}`);
-      console.log(`last name: ${this.profileLastName}`);
-      console.log(`username: ${this.profileUsername}`);
-      console.log(
-        "------------------------------------------------------------"
-      );
-      console.log("[Check returned property]");
-      console.log(this.wishedFirstName);
-      console.log(this.wishedLastName);
-      console.log(this.wishedUsername);
-      console.log(
-        "------------------------------------------------------------"
-      );
-      console.log("[Check return property length]");
-      console.log(this.wishedFirstName.length);
-      console.log(this.wishedLastName.length);
-      console.log(this.wishedUsername.length);
 
       // update the database value when necessary
-      this.wishedFirstName.length > 0
-        ? this.updFirstName(this.wishedFirstName)
+      wishedFirstName.value.length > 0
+        ? updFirstName(wishedFirstName.value)
         : null;
-      this.wishedLastName.length > 0
-        ? this.updLastName(this.wishedLastName)
+      wishedLastName.value.length > 0
+        ? updLastName(wishedLastName.value)
         : null;
-      this.wishedUsername.length > 0
-        ? this.updUsername(this.wishedUsername)
+      wishedUsername.value.length > 0
+        ? updUsername(wishedUsername.value)
         : null;
 
-      this.modalActive = !this.modalActive;
-      this.wishedFirstName = "";
-      this.wishedLastName = "";
-      this.wishedUsername = "";
-      console.log(
-        "------------------------------------------------------------"
-      );
-      console.log("[Checkpoint: Has state changed? Retrieve the state]");
-      // retreive the computed state
-      console.log(`New first name: ${this.profileFirstName}`);
-      console.log(`New last name: ${this.profileLastName}`);
-      console.log(`New username: ${this.profileUsername}`);
-      console.log(
-        "------------------------------------------------------------"
-      );
-      console.log("[Successfully update the state]");
-    },
-    closeModal() {
-      this.modalActive = !this.modalActive;
-    },
-  },
-  computed: {
-    ...mapState("users", [
-      "profileInitials",
-      "profileFirstName",
-      "profileLastName",
-      "profileUsername",
-      "profileEmail",
-    ]),
+      // reset the input fields
+      modalActive.value = !modalActive.value;
+      wishedFirstName.value = "";
+      wishedLastName.value = "";
+      wishedUsername.value = "";
+    }
+
+    function closeModal() {
+      modalActive.value = !modalActive.value;
+    }
+
+    // wrapped in a object according to the category
+    // to be organized and return the variables, functions, and computed properties
+
+    const vars = {
+      modalMessage,
+      modalActive,
+      wishedFirstName,
+      wishedLastName,
+      wishedUsername,
+    }
+
+    const funcs = {
+      updFirstName,
+      updLastName,
+      updUsername,
+      updateProfile,
+      closeModal,
+    }
+
+    const storeComputed = {
+      profileInitials: computed(() => store.getters["users/profileInitials"]),
+      profileFirstName: computed(() => store.getters["users/profileFirstName"]),
+      profileLastName: computed(() => store.getters["users/profileLastName"]),
+      profileUsername: computed(() => store.getters["users/profileUsername"]),
+      profileEmail: computed(() => store.getters["users/profileEmail"]),
+    }
+
+    return {
+      ...storeComputed,
+      ...funcs,
+      ...vars,
+    }
   },
 };
 </script>

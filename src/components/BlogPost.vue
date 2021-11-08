@@ -75,7 +75,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: left;
+    align-items: center;
     flex: 4;
     order: 2;
     @media (min-width: 700px) {
