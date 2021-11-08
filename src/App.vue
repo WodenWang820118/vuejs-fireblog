@@ -2,7 +2,7 @@
   <div class="app-wrapper">
     <!-- provide the router view only if posts are loaded -->
     <div class="app" v-if="postLoaded">
-      <Navigation :user_login="user_login" />
+      <Navigation :user_login="user_login" :admin="admin" />
         <router-view />
       <Footer v-if="!user_login" />
     </div>
@@ -29,7 +29,8 @@ export default {
 
     // composition api, use ref
     var user_login = ref(null);
- 
+    var admin = ref(false);
+
     // dispatched, or committed method from store
 
     const getCurrentUser = () => {
@@ -56,8 +57,9 @@ export default {
         if (user) {
           // User is signed in, see docs for a list of available properties
           // https://firebase.google.com/docs/reference/js/firebase.User
-          // var email = user.email
+          var email = user.email
           // console.log(`The user email: ${email}`)
+          email == process.env.ADMIN_EMAIL ? admin.value = true : admin.value = false
           console.log("The user signed in!");
           user = mountUser(user);
           getCurrentUser();
@@ -69,17 +71,20 @@ export default {
       });
     }
 
+    // at setup phase, get the posts before mounting; otherwise, looks slow
+    getPost();
+
     // define the behaviors of the view
+    // mount the user
     onMounted(() => {
       checkUserState();
-      getPost()
     });
 
     // the return here returns the functions that are used in the template
     return {
       profileEmail: computed(() => store.getters['users/profileEmail']),
       postLoaded: computed(() => store.getters['posts/postLoaded']),
-      user_login,
+      user_login, admin,
     };
   },
   watch: {
