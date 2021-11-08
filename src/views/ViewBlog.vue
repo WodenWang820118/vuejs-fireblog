@@ -1,4 +1,3 @@
-// TODO: redo the viewBlog.vue since there has a function to get post
 <template>
   <div class="post-view" v-if="currentBlog">
     <div class="container quillWrapper">
@@ -19,50 +18,52 @@
 
 <script>
 import marked from "marked";
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import db from "../firebase/firebaseInit";
-import { mapActions } from "vuex";
 
 export default {
   name: "ViewBlog",
-  data() {
-    return {
-      currentBlog: null,
-      reload: true,
-    };
-  },
-  components: {},
-  computed: {
-    // ...mapGetters('blogPosts','blogPosts'),
-    compiledMarkdown: function () {
-      return marked(this.currentBlog.blogHTML);
-    },
-  },
-  methods: {
-    ...mapActions("posts", ["getCertainPost"]),
-  },
-  async created() {
-    // this.getCertainPost(this.$route.params.blogId)
-    // the data would be different from state and the firestore
-    // therefore, directly get the document from the firestore
-    // console.log("[Try to get the post..]")
-    const docRef = await db
-      .collection("blogPosts")
-      .doc(this.$route.params.blogId);
-    docRef
-      .get()
+  setup() {
+    // varailables defined
+    const currentBlog = ref();
+    const reload = ref(true);
+
+    // access router
+    const router = useRoute();
+
+
+    /**
+     * The function get the blog post using the default generaetd blogId by firebase
+     */
+    function getCertainPost() {
+      const docRef = db.collection("blogPosts").doc(router.params.blogId);
+      docRef.get()
       .then((doc) => {
-        if (doc.exists) {
-          // console.log("Document data:", doc.data())
-          this.currentBlog = doc.data();
-        } else {
-          console.log("No such document!");
-        }
+        doc.exists ? currentBlog.value = doc.data() : currentBlog.value = null;
       })
       .catch((error) => {
         console.log("Error getting document:", error);
       });
+    }
+
+    onMounted(() => {
+      getCertainPost();
+    });
+
+    // cannot return the marked during the setup phase
+    // it will return the function string instead of calling
+
+    return {
+      reload, currentBlog,
+    }
+
   },
-  mounted() {},
+  computed: {
+    compiledMarkdown: function () {
+      return marked(this.currentBlog.blogHTML);
+    },
+  },
 };
 </script>
 
