@@ -16,7 +16,6 @@ import { ref, onMounted, computed } from "vue";
 import { useStore } from 'vuex'
 import firebase from "firebase/app"; // for using the firebase namespace
 import "firebase/auth"; // for initilize the auth() as a function -> reference: https://stackoverflow.com/questions/48592656/firebase-auth-is-not-a-function
-
 export default {
   name: "app",
   components: {
@@ -26,27 +25,20 @@ export default {
   setup() {
     // composition api, useStore with vuex
     const store = useStore();
-
     // composition api, use ref
     const user_login = ref(null);
     const admin = ref(null);
-
     // dispatched, or committed method from store
-
     const getCurrentUser = () => {
       return store.dispatch('users/getCurrentUser')
     }
-
     const mountUser = (user) => {
       return store.dispatch('users/mountUser', user)
     }
-
     const getPost = () => {
       return store.dispatch('posts/getPost')
     }
-
     // the functions used in this view
-
     /**
      * The function check if any user logged in
      */
@@ -71,16 +63,13 @@ export default {
         }
       });
     }
-
     // at setup phase, get the posts before mounting; otherwise, looks slow
     getPost();
-
     // define the behaviors of the view
     // mount the user
     onMounted(() => {
       checkUserState();
     });
-
     // the return here returns the functions that are used in the template
     return {
       profileEmail: computed(() => store.getters['users/profileEmail']),
@@ -103,36 +92,30 @@ export default {
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap");
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: "Quicksand", sans-serif;
 }
-
 .app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
-
 .container {
   max-width: 1440px;
   margin: 0 auto;
 }
-
 .link {
   cursor: pointer;
   text-decoration: none;
   text-transform: uppercase;
   color: black;
 }
-
 .link-light {
   color: #fff;
 }
-
 .arrow {
   margin-left: 8px;
   width: 12px;
@@ -150,7 +133,6 @@ export default {
   // customed color: https://bit.ly/3io6iI5
   filter: invert(1);
 }
-
 button,
 .router-button {
   transition: 500ms ease all;
@@ -200,7 +182,6 @@ button,
   font-size: 12px;
   color: red;
 }
-
 .blog-card-wrap {
   position: relative;
   padding: 80px 16px;

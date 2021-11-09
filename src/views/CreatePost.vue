@@ -57,65 +57,91 @@ import db from "../firebase/firebaseInit"; // the configuration data
 import "firebase/storage";
 import DOMPurify from "dompurify";
 
-import { mapActions, mapState } from "vuex";
+import { useStore } from "vuex";
+import { useRoute, useRouter } from "vue-router";
+import { ref, computed } from "vue";
 export default {
   name: "CreatePost",
-  data() {
-    return {
-      error: null,
-      errorMsg: null,
-      coverPhoto: null,
-      blogTitle: "",
-      text: "", // the content inside the editor, which is the html
-      loading: null,
-    };
-  },
   components: {
     BlogCoverPreview,
     Loading,
   },
-  computed: {
-    ...mapState("users", ["profileId"]),
-    ...mapState("posts", [
-      "blogPhotoFileURL",
-      "blogCoverPhotoName",
-      "blogHTML",
-      "blogPhotoPreview",
-    ]),
-  },
-  methods: {
-    // for using the "this.method()" convention to call methods
-    ...mapActions("posts", {
-      updBlogTitle: "updBlogTitle",
-      fileNameChange: "fileNameChange",
-      createFileURL: "createFileURL",
-      togglePreview: "togglePreview",
-      getPost: "getPost",
-    }),
+  setup() {
+    // state management
+    const store = useStore();
+    const profileId = computed(() => store.getters["users/profileId"]);
+    const storeComputed = {
+      blogHTML: computed(() => store.getters["posts/blogHTML"]),
+      blogCoverPhotoName: computed(
+        () => store.getters["posts/blogCoverPhotoName"]
+      ),
+      blogPhotoFileURL: computed(() => store.getters["posts/blogPhotoFileURL"]),
+      blogPhotoPreview: computed(() => store.getters["posts/blogPhotoPreview"]),
+    };
+
+    const updBlogTitle = (title) => {
+      store.dispatch("posts/updateBlogTitle", title);
+    };
+
+    const filenameChange = (filename) => {
+      store.dispatch("posts/filenameChange", filename);
+    };
+
+    const createFileURL = (file) => {
+      store.dispatch("posts/createFileURL", file);
+    };
+
+    const togglePreview = () => {
+      store.dispatch("posts/togglePreview");
+    };
+
+    const storeActions = {
+      updBlogTitle,
+      togglePreview,
+    };
+
+    // const getPost = () => {
+    //   store.dispatch("posts/getPost");
+    // };
+
+    // route management
+    const route = useRoute();
+    const router = useRouter();
+
+    // variables
+    const error = ref(null);
+    const errorMsg = ref(null);
+    const coverPhoto = ref(null);
+    const blogTitle = ref("");
+    const text = ref("");
+    const loading = ref(null);
+    const blogPhoto = ref(null); // ref props in the template
+
+    // functions
+
     /**
-     * used for cover photo preview, therefore, need to change the state
+     * create the filename state and the ObjectURL state
      */
-    fileChange() {
-      this.coverPhoto = this.$refs.blogPhoto.files[0];
-      const fileName = this.coverPhoto.name;
-      this.fileNameChange(fileName); // change the state
-      this.createFileURL(URL.createObjectURL(this.coverPhoto)); // create the URL
-    },
+    function fileChange() {
+      coverPhoto.value = blogPhoto.value.files[0];
+      console.log(coverPhoto.value);
+      const fileName = coverPhoto.value.name;
+      filenameChange(fileName); // change the state
+      createFileURL(URL.createObjectURL(coverPhoto.value)); // create the URL
+    }
+
     // reference: https://code-farmer-i.github.io/vue-markdown-editor/senior/upload-image.html
     // seems to upload one image every time when clicking the upload image on the toolbar
     // TODO: bug, if trigger bug, the function won't redirect to the named route
-    imageHandler(event, insertImage, files) {
+    /**
+     * The image handler according to the v-md-editor, which is to upload the image
+     * to the firebase
+     */
+    function imageHandler(event, insertImage, files) {
       console.log("[Trigger imageHandler]");
       const contentPhoto = files[0];
       const fileName = contentPhoto.name;
-      const url = URL.createObjectURL(contentPhoto);
-      // const contentPhotoName = this.contentPhoto.name
-      // const url = URL.createObjectURL(this.contentPhoto)
-      console.log("Corresponding files: " + contentPhoto); // [object File]
-      console.log("The file name is: " + fileName); // 5741195.jpg
-      console.log("The event: " + event); // [object Event]
-      console.log("The url: " + url); // blob:http://localhost:8080/08e9f458-8d7e-4828-9b96-0b404ca3a133
-      console.log("[Initialize the database..]");
+      // const url = URL.createObjectURL(contentPhoto);
       const storageRef = firebase.storage().ref();
       console.log("[Initialize the firebase stoarge successfully]");
       const docRef = storageRef.child(`documents/blogPostPhotos/${fileName}`);
@@ -140,25 +166,46 @@ export default {
           });
         }
       );
-    },
-    uploadBlog() {
+    }
+
+    /**
+     * Get the uploaded written blog from the firebase
+     */
+    function getWrittenPost() {
+      const docRef = db.collection("blogPosts").doc(route.params.blogId);
+      docRef
+        .get()
+        .then((doc) => {
+          doc.exists
+            ? console.log("Document data:", doc.data())
+            : console.log("No such document!");
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
+    }
+
+    /**
+     * Upload the blog post to the firebase
+     */
+    function uploadBlog() {
       if (db) {
         console.log("database alive");
       }
-      if (this.blogTitle.length !== 0 && this.text.length !== 0) {
-        if (this.coverPhoto) {
-          this.loading = true;
+      if (blogTitle.value.length !== 0 && text.value.length !== 0) {
+        if (coverPhoto.value) {
+          loading.value = true;
           console.log("[All validations passed]");
           const timestamp = Date.now();
-          const fileName = this.coverPhoto.name;
+          const fileName = coverPhoto.value.name;
           const uniqueFileName = fileName + timestamp;
           const storageRef = firebase.storage().ref();
-          // file name should be unique, othwise, might get 403: https://stackoverflow.com/questions/41943860/getting-403-forbidden-error-when-trying-to-load-image-from-firebase-storage
           const docRef = storageRef.child(
             `documents/BlogCoverPhotos/${uniqueFileName}`
           );
 
-          const uploadTask = docRef.put(this.coverPhoto);
+          const uploadTask = docRef.put(coverPhoto.value);
+          // watch the upload task according to the progress
           uploadTask.on(
             "state_changed",
             (snapshot) => {
@@ -176,7 +223,7 @@ export default {
             },
             (err) => {
               console.log(err);
-              this.loading = false;
+              loading.value = false;
             },
             async () => {
               const timestamp = Date.now();
@@ -184,21 +231,22 @@ export default {
               uploadTask.snapshot.ref.getDownloadURL().then((url) => {
                 console.log("The URL back from firebase:" + url);
                 console.log("The database id: " + document.id);
+                // set the schema
                 document.set({
-                  blogId: document.id, // the path is also used as blogID
-                  blogHTML: DOMPurify.sanitize(this.text),
+                  blogId: document.id, // the blogID is also used as path
+                  blogHTML: DOMPurify.sanitize(text.value),
                   blogCoverPhoto: url,
                   blogCoverPhotoName: uniqueFileName,
-                  blogTitle: this.blogTitle,
-                  profileId: this.profileId,
+                  blogTitle: blogTitle.value,
+                  profileId: profileId.value,
                   blogDate: timestamp,
                 });
               });
-              this.loading = true;
+              loading.value = true;
               console.log("[Route to the new post]");
-              await this.getPost();
-              this.loading = false;
-              await this.$router.push({
+              getWrittenPost();
+              loading.value = false;
+              await router.push({
                 name: "ViewBlog",
                 params: { blogId: document.id },
               });
@@ -206,20 +254,35 @@ export default {
           );
           return;
         }
-        this.error = true;
-        this.errorMsg = "Please ensure you uploaded a cover photo";
+        error.value = true;
+        errorMsg.value = "Please ensure you uploaded a cover photo";
         setTimeout(() => {
-          this.error = false;
+          error.value = false;
         }, 5000);
         return; // if no return, directly execute the code below
       }
-      this.error = true;
-      this.errorMsg = "Please ensure Blog Title & Blog Post has been filled";
+      error.value = true;
+      errorMsg.value = "Please ensure Blog Title & Blog Post has been filled";
       setTimeout(() => {
-        this.error = false;
+        error.value = false;
       }, 5000);
       return;
-    },
+    }
+
+    return {
+      ...storeComputed,
+      ...storeActions,
+      fileChange,
+      imageHandler,
+      uploadBlog,
+      error,
+      errorMsg,
+      coverPhoto,
+      blogTitle,
+      text,
+      loading,
+      blogPhoto,
+    };
   },
 };
 </script>

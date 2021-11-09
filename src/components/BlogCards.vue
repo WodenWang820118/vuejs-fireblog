@@ -10,7 +10,6 @@
       </div>
     </div>
     <img class="image" :src="card.blogCoverPhoto" alt="" />
-    <!-- TODO: the card explicitly too long sometimes with the long height photo -->
     <div class="info">
       <h4>{{ card.blogTitle }}</h4>
       <h6>
@@ -31,7 +30,9 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router"
+import { computed } from "vue"
 export default {
   name: "BlogCards",
   props: {
@@ -39,20 +40,36 @@ export default {
       type: Object,
     },
   },
-  methods: {
-    ...mapActions("posts", ["deletePostFromDatabase"]),
-    deletePost() {
-      this.deletePostFromDatabase(this.card.blogID);
-    },
-    async editBlog() {
-      await this.$router.push({
-        name: "EditBlog",
-        params: { blogId: this.card.blogId },
-      });
-    },
-  },
-  computed: {
-    ...mapGetters("posts", ["editPost"]),
+  setup(props) {
+    // state managemnet
+    const store = useStore();
+
+    // actions
+    const deletePostFromDatabase = (id) => {
+      return store.dispatch('posts/deletePostFromDatabase', id)
+    };
+
+    // route management
+    const router = useRouter();
+
+    function editBlog () {
+      router.push({
+        name: 'EditBlog',
+        params: {
+          blogId: props.card.blogId
+        }
+      })
+    };
+
+    function deletePost () {
+      deletePostFromDatabase(props.card.blogId)
+    };
+
+    return {
+      editPost: computed(() => { return store.getters['posts/editPost']}),
+      deletePost,
+      editBlog,
+    }
   },
 };
 </script>

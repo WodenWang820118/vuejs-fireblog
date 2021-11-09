@@ -69,8 +69,8 @@ export default {
         this.error = false;
         this.errorMsg = "";
         const createUser = await firebase
-                            .auth()
-                            .createUserWithEmailAndPassword(this.email, this.password);
+          .auth()
+          .createUserWithEmailAndPassword(this.email, this.password);
         const result = await createUser;
         const dataBase = db.collection("users").doc(result.user.uid);
         // create the schema here

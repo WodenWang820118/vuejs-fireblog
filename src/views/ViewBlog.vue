@@ -12,52 +12,66 @@
       </h4>
       <img class="cover-photo" :src="currentBlog.blogCoverPhoto" alt="" />
       <div class="post-content ql-editor" v-html="compiledMarkdown"></div>
+      <!-- <vue-markdown class="post-content ql-editor" ref="src"></vue-markdown> -->
     </div>
   </div>
 </template>
 
 <script>
 import marked from "marked";
+// import VueMarkdown from "vue-markdown-render";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import db from "../firebase/firebaseInit";
 
 export default {
   name: "ViewBlog",
+  components: {
+    // VueMarkdown,
+  },
   setup() {
     // varailables defined
     const currentBlog = ref();
     const reload = ref(true);
+    // const src = ref();
 
     // access router
     const route = useRoute();
-
 
     /**
      * The function get the blog post using the default generaetd blogId by firebase
      */
     function getCertainPost() {
+      console.log(route.params.blogId);
       const docRef = db.collection("blogPosts").doc(route.params.blogId);
-      docRef.get()
-      .then((doc) => {
-        doc.exists ? currentBlog.value = doc.data() : currentBlog.value = null;
-      })
-      .catch((error) => {
-        console.log("Error getting document:", error);
-      });
+      docRef
+        .get()
+        .then((doc) => {
+          doc.exists
+            ? (currentBlog.value = doc.data())
+            : (currentBlog.value = null);
+          // currentBlog.value
+          //   ? (src.value = currentBlog.value.blogHTML)
+          //   : (src.value = "");
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
     }
 
     onMounted(() => {
       getCertainPost();
+      // src.value = currentBlog.value.blogHTML
     });
 
     // cannot return the marked during the setup phase
     // it will return the function string instead of calling
 
     return {
-      reload, currentBlog,
-    }
-
+      reload,
+      currentBlog,
+      // src,
+    };
   },
   computed: {
     compiledMarkdown: function () {

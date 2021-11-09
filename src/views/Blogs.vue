@@ -23,7 +23,7 @@ export default {
   setup() {
     // state management
     const store = useStore();
-    const editPost = computed(() => store.getters['posts/editPost']);
+    const editPost = computed(() => store.getters["posts/editPost"]);
     const edit = ref(null); // for toggle purpose
 
     const toggleEditPost = (edit) => {
@@ -34,21 +34,23 @@ export default {
      * According to the state, reassign the local edit boolean to toggle the edit mode
      */
     function updEditPost(edit) {
-      edit.value = !editPost.value
-      console.log(edit.value)
-      toggleEditPost(edit.value)
+      edit.value = !editPost.value;
+      console.log(edit.value);
+      toggleEditPost(edit.value);
     }
 
     onBeforeUnmount(() => {
       // reset the state whenever leave the page
-      toggleEditPost(false)
+      toggleEditPost(false);
     });
 
     return {
-      blogPosts: computed(() => store.getters['posts/blogPosts']),
-      editPost, edit,
-      updEditPost, toggleEditPost, 
-    }
+      blogPosts: computed(() => store.getters["posts/blogPosts"]),
+      editPost,
+      edit,
+      updEditPost,
+      toggleEditPost,
+    };
   },
 };
 </script>

@@ -29,6 +29,9 @@ const getters = {
   profileInitials(state) {
     return state.profileInitials;
   },
+  profileId(state) {
+    return state.profileId;
+  },
 };
 
 const actions = {

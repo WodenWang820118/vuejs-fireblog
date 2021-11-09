@@ -74,13 +74,15 @@ export default {
 
     // computed properties
     const storeComputed = {
-      users: computed(()=>store.getters["users/profileId"]),
-      blogHTML: computed(()=>store.getters["blogs/blogHTML"]),
-      blogCoverPhotoName: computed(()=>store.getters["blogs/blogCoverPhotoName"]),
-      blogPhotoFileURL: computed(()=>store.getters["blogs/blogPhotoFileURL"]),
-      blogPhotoPreview: computed(()=>store.getters["blogs/BlogPhotoPreview"]),
-      blogPosts: computed(()=>store.getters["blogs/blogPosts"]),
-    }
+      users: computed(() => store.getters["users/profileId"]),
+      blogHTML: computed(() => store.getters["blogs/blogHTML"]),
+      blogCoverPhotoName: computed(
+        () => store.getters["blogs/blogCoverPhotoName"]
+      ),
+      blogPhotoFileURL: computed(() => store.getters["blogs/blogPhotoFileURL"]),
+      blogPhotoPreview: computed(() => store.getters["blogs/BlogPhotoPreview"]),
+      blogPosts: computed(() => store.getters["blogs/blogPosts"]),
+    };
 
     // actions
     const fileNameChange = (fileName) => {
@@ -101,10 +103,6 @@ export default {
 
     const setBlogState = (state) => {
       return store.dispatch("posts/setBlogState", state);
-    };
-
-    const deletePostFromDatabase = (id) => {
-      return store.dispatch("posts/deletePostFromDatabase", id);
     };
 
     // variables
@@ -148,8 +146,11 @@ export default {
         "stata_changed",
         (snapshot) => {
           console.log(snapshot); // multiple snapshot -> upload progressing
-        }, (err) => { console.log(err);}
-        ,() => {
+        },
+        (err) => {
+          console.log(err);
+        },
+        () => {
           console.log("[Waiting for downloading the image URL]");
           uploadTask.snapshot.ref.getDownloadURL().then((url) => {
             console.log("The URL back from firebase:" + url);
@@ -179,7 +180,7 @@ export default {
           const storageRef = firebase.storage().ref();
           // file name should be unique, othwise, might get 403: https://stackoverflow.com/questions/41943860/getting-403-forbidden-error-when-trying-to-load-image-from-firebase-storage
           const docRef = storageRef.child(
-            `documents/BlogCoverPhotos/${ uniqueFileName }`
+            `documents/BlogCoverPhotos/${uniqueFileName}`
           );
 
           const uploadTask = docRef.put(coverPhoto.value);
@@ -245,23 +246,23 @@ export default {
     }
 
     // bring the data back to the text editor from firebase
-    onMounted(()=>{
+    onMounted(() => {
       const docRef = db.collection("blogPosts").doc(route.params.blogId);
       docRef
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          currentBlog.value = doc.data();
-          text.value = currentBlog.value.blogHTML; // data return
-          blogTitle.value = currentBlog.value.blogTitle; // data return
-        } else {
-          console.log("No such document!");
-        }
-      })
-      .catch((error) => {
-        console.log("Error getting document:", error);
-      });
-    })
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            currentBlog.value = doc.data();
+            text.value = currentBlog.value.blogHTML; // data return
+            blogTitle.value = currentBlog.value.blogTitle; // data return
+          } else {
+            console.log("No such document!");
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
+    });
 
     return {
       ...storeComputed,
@@ -278,7 +279,6 @@ export default {
       togglePreview,
       updBlogTitle,
       setBlogState,
-      deletePostFromDatabase,
     };
   },
 };

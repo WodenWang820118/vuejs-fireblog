@@ -10,8 +10,15 @@
         <ul v-show="!mobile">
           <router-link class="link" :to="{ name: 'Home' }">Home</router-link>
           <router-link class="link" :to="{ name: 'Blogs' }">Blogs</router-link>
-          <router-link v-if="user_login && admin" class="link" :to="{ name: 'CreatePost' }">Create Post </router-link>
-          <router-link v-if="!user_login" class="link" :to="{ name: 'Login' }">Login/Register </router-link>
+          <router-link
+            v-if="user_login && admin"
+            class="link"
+            :to="{ name: 'CreatePost' }"
+            >Create Post
+          </router-link>
+          <router-link v-if="!user_login" class="link" :to="{ name: 'Login' }"
+            >Login/Register
+          </router-link>
         </ul>
         <div
           v-if="user"
@@ -67,9 +74,15 @@
       <ul class="mobile-nav" v-show="mobileNav">
         <router-link class="link" :to="{ name: 'Home' }">Home</router-link>
         <router-link class="link" :to="{ name: 'Blogs' }">Blogs</router-link>
-        <router-link v-if="user_login && admin" class="link" :to="{ name: 'CreatePost' }">Create Post</router-link
+        <router-link
+          v-if="user_login && admin"
+          class="link"
+          :to="{ name: 'CreatePost' }"
+          >Create Post</router-link
         >
-        <router-link v-if="!user_login" class="link" :to="{ name: 'Login' }">Login/Register</router-link>
+        <router-link v-if="!user_login" class="link" :to="{ name: 'Login' }"
+          >Login/Register</router-link
+        >
       </ul>
     </transition>
   </header>
@@ -87,7 +100,7 @@ export default {
     const store = useStore();
 
     // the variables for adjusting the responsiiveness
-    const profileMenu =  ref(false);
+    const profileMenu = ref(false);
     const mobile = ref(null); // true ? 'show icon' : '' -> can toggle mobileNav
     const mobileNav = ref(null);
     const windowWidth = ref(window.innerWidth);
@@ -150,9 +163,15 @@ export default {
       profileLastName: computed(() => store.getters["users/profileLastName"]),
       profileUsername: computed(() => store.getters["users/profileUsername"]),
       profileEmail: computed(() => store.getters["users/profileEmail"]),
-      profileMenu, profile, mobile, mobileNav, windowWidth, // variables
-      toggleProfileMenu, toggleMobileNav, signOut // functions
-    }
+      profileMenu,
+      profile,
+      mobile,
+      mobileNav,
+      windowWidth, // variables
+      toggleProfileMenu,
+      toggleMobileNav,
+      signOut, // functions
+    };
   },
   props: {
     user_login: {

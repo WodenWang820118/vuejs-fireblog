@@ -1,12 +1,7 @@
-import {
-  createApp
-} from "vue";
+import { createApp } from "vue";
 import App from "./App.vue";
-import router from "./router";
 import store from "./store";
-import {
-  sync
-} from 'vuex-router-sync'
+import { sync } from "vuex-router-sync";
 import db from "./firebase/firebaseInit"; // the configuration data
 import firebase from "firebase/app"; // for using the firebase services (web only)
 import "firebase/auth"; // for using the auth()
@@ -40,8 +35,11 @@ import "codemirror/addon/scroll/simplescrollbars";
 import "codemirror/addon/scroll/simplescrollbars.css";
 // style
 import "codemirror/lib/codemirror.css";
+
 // language
 import enUS from "@kangc/v-md-editor/lib/lang/en-US";
+
+import router from "./router";
 
 VMdEditor.Codemirror = Codemirror;
 VMdEditor.use(githubTheme);
@@ -54,5 +52,9 @@ if (firebase.apps.length > 0 && db) {
 }
 
 // reference: https://www.npmjs.com/package/vuex-router-sync
-sync(store, router)
-createApp(App).use(VMdEditor).use(router).use(store).mount("#app");
+sync(store, router);
+createApp(App)
+  .use(VMdEditor)
+  .use(router)
+  .use(store)
+  .mount("#app");

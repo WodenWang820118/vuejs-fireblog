@@ -42,8 +42,8 @@ const actions = {
   async newBlogPost({ commit }, post) {
     commit("setBlog", post);
   },
-  async fileNameChange({ commit }, fileName) {
-    commit("setFileName", fileName);
+  async filenameChange({ commit }, filename) {
+    commit("setFileName", filename);
   },
   async createFileURL({ commit }, fileURL) {
     commit("setFileURL", fileURL);

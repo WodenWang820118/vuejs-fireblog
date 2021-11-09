@@ -66,26 +66,26 @@ export default {
   },
   setup() {
     // variables
-    const modalMessage = ref("Changes were saved")
-    const modalActive = ref(null)
-    const wishedFirstName = ref("")
-    const wishedLastName = ref("")
-    const wishedUsername = ref("")
+    const modalMessage = ref("Changes were saved");
+    const modalActive = ref(null);
+    const wishedFirstName = ref("");
+    const wishedLastName = ref("");
+    const wishedUsername = ref("");
 
     // state management
-    const store = useStore()
+    const store = useStore();
 
     const updFirstName = (firstName) => {
-      return store.dispatch("users/updFirstName", firstName)
-    }
+      return store.dispatch("users/updFirstName", firstName);
+    };
 
     const updLastName = (lastName) => {
-      return store.dispatch("users/updLastName", lastName)
-    }
+      return store.dispatch("users/updLastName", lastName);
+    };
 
     const updUsername = (userName) => {
-      return store.dispatch("users/updUsername", userName)
-    }
+      return store.dispatch("users/updUsername", userName);
+    };
 
     // functions
 
@@ -130,14 +130,14 @@ export default {
       profileLastName: computed(() => store.getters["users/profileLastName"]),
       profileUsername: computed(() => store.getters["users/profileUsername"]),
       profileEmail: computed(() => store.getters["users/profileEmail"]),
-    }
+    };
     const vars = {
       modalMessage,
       modalActive,
       wishedFirstName,
       wishedLastName,
       wishedUsername,
-    }
+    };
 
     const funcs = {
       updFirstName,
@@ -145,13 +145,13 @@ export default {
       updUsername,
       updateProfile,
       closeModal,
-    }
+    };
 
     return {
       ...storeComputed,
       ...funcs,
       ...vars,
-    }
+    };
   },
 };
 </script>

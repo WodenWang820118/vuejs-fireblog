@@ -5,7 +5,7 @@ import posts from "./modules/posts";
 // it's different from the tutorial in 2019
 // https://stackoverflow.com/questions/66516327/vue-3-how-to-use-vuex-modules
 
-const debug = process.env.NODE_ENV !== 'production'
+const debug = process.env.NODE_ENV !== "production";
 
 const store = createStore({
   modules: {
