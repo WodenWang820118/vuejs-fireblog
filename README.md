@@ -9,7 +9,7 @@ Currently, the project moves to the composition API, which seamlessly improves t
 The project is still ongoing the refactor process as you might see some options API show up in some views or components.
 
 ## Future plans
-I've been learning Vue 3 for a while, but it could be hard to look up specific components within a view.Further, when uploading
+I've been learning Vue 3 for a while, but it could be hard to look up specific components within a view. Further, when uploading
 high-resolution preview pictures, the website responds slowly. Therefore, the future goals:
 1. I will incorporate Typescript, the prevalent language for better development collaboration, debugging, and maintenance.
 2. Lazy loading the Vuex store, improving the overall latency issue.
