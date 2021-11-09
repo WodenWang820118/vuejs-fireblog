@@ -4,7 +4,7 @@ import firebase from "firebase/app";
 import "firebase/firestore"; // to initilize the default App
 
 var firebaseConfig = {
-  apiKey: "AIzaSyB9D51M_e4XkvBSoyFZPc8hTaKCTbgqBjk",
+  apiKey: process.env.VUE_APP_FIREBASEKEY,
   authDomain: "vuejs3-fireblog.firebaseapp.com",
   projectId: "vuejs3-fireblog",
   storageBucket: "vuejs3-fireblog.appspot.com",
