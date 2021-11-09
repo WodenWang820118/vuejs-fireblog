@@ -1,7 +1,7 @@
 <template>
   <div class="blog-card-wrap">
     <div class="blog-cards container">
-      <div class="toggle-edit">
+      <div class="toggle-edit" v-if="admin">
         <span>Toggle Editing Post</span>
         <input type="checkbox" autocomplete="off" @change="updEditPost" />
       </div>
@@ -13,7 +13,10 @@
 <script>
 import BlogCards from "@/components/BlogCards";
 import { useStore } from "vuex";
-import { onBeforeUnmount, computed, ref } from "vue";
+import { onBeforeUnmount, computed, ref, onBeforeMount } from "vue";
+import firebase from "firebase/app"; // for using the firebase namespace
+import "firebase/auth"; // for initilize the auth() as a function -> reference: https://stackoverflow.com/questions/48592656/firebase-auth-is-not-a-function
+
 
 export default {
   name: "Blogs",
@@ -24,11 +27,16 @@ export default {
     // state management
     const store = useStore();
     const editPost = computed(() => store.getters["posts/editPost"]);
-    const edit = ref(null); // for toggle purpose
-
+    
+    // actions
     const toggleEditPost = (edit) => {
       store.dispatch("posts/toggleEditPost", edit);
     };
+
+    // varibles
+    const edit = ref(null); // for toggle purpose
+    const admin = ref(false);
+
 
     /**
      * According to the state, reassign the local edit boolean to toggle the edit mode
@@ -39,6 +47,31 @@ export default {
       toggleEditPost(edit.value);
     }
 
+     /**
+     * The function check if the logged in user is admin or not
+     */
+    function checkUserState() {
+      // offical recommended way to fire the methods after the user state changes
+      // otherwise, could be null
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/firebase.User
+          let email = user.email
+          // console.log(`The user email: ${email}`)
+          // console.log(`The admin email: ${process.env.VUE_APP_ADMINEMAIL}`)
+          email === process.env.VUE_APP_ADMINEMAIL ? admin.value = true : admin.value = false
+        } else {
+          admin.value = false
+          console.log("There is no user using right now");
+        }
+      });
+    }
+    
+    onBeforeMount(() => {
+      checkUserState();
+    });
+    
     onBeforeUnmount(() => {
       // reset the state whenever leave the page
       toggleEditPost(false);
@@ -50,6 +83,7 @@ export default {
       edit,
       updEditPost,
       toggleEditPost,
+      admin,
     };
   },
 };
