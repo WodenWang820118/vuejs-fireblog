@@ -11,15 +11,13 @@
         }}
       </h4>
       <img class="cover-photo" :src="currentBlog.blogCoverPhoto" alt="" />
-      <div class="post-content ql-editor" v-html="compiledMarkdown"></div>
-      <!-- <vue-markdown class="post-content ql-editor" ref="src"></vue-markdown> -->
+      <Markdown class="post-content ql-editor" :source="src" :html=true />
     </div>
   </div>
 </template>
 
 <script>
-import marked from "marked";
-// import VueMarkdown from "vue-markdown-render";
+import Markdown from 'vue3-markdown-it';
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import db from "../firebase/firebaseInit";
@@ -27,13 +25,13 @@ import db from "../firebase/firebaseInit";
 export default {
   name: "ViewBlog",
   components: {
-    // VueMarkdown,
+    Markdown,
   },
   setup() {
     // varailables defined
     const currentBlog = ref();
     const reload = ref(true);
-    // const src = ref();
+    const src = ref();
 
     // access router
     const route = useRoute();
@@ -50,9 +48,7 @@ export default {
           doc.exists
             ? (currentBlog.value = doc.data())
             : (currentBlog.value = null);
-          // currentBlog.value
-          //   ? (src.value = currentBlog.value.blogHTML)
-          //   : (src.value = "");
+            src.value = currentBlog.value.blogHTML;
         })
         .catch((error) => {
           console.log("Error getting document:", error);
@@ -61,22 +57,15 @@ export default {
 
     onMounted(() => {
       getCertainPost();
-      // src.value = currentBlog.value.blogHTML
     });
 
     // cannot return the marked during the setup phase
     // it will return the function string instead of calling
-
     return {
       reload,
       currentBlog,
-      // src,
+      src,
     };
-  },
-  computed: {
-    compiledMarkdown: function () {
-      return marked(this.currentBlog.blogHTML);
-    },
   },
 };
 </script>
@@ -105,5 +94,16 @@ export default {
     width: 100%;
     margin-bottom: 32px;
   }
+}
+// overide the default markdown style
+td, th {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  border:2px solid #ddd;
 }
 </style>
