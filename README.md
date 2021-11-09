@@ -18,3 +18,6 @@ high-resolution preview pictures, the website responds slowly. Therefore, the fu
 - npm install -> install the tools and dependencies according to package.json.
 - npm run server -> start the application in localhost.
 
+## Special thanks
+Appreciate John and Traversy Media giving the code and tutorial for free.
+The [tutorial] (https://www.youtube.com/watch?v=ISv22NNL-aE&t=1s&ab_channel=TraversyMedia)
