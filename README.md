@@ -1,7 +1,8 @@
 # Fireblog using firebase & vue 3 composition API
 
 ## Overview
-The project is initially implemented by [John]("https://github.com/johnkomarnicki/FireBlogs-YouTube").
+The project is initially implemented by John Komarnicki "https://github.com/johnkomarnicki/FireBlogs-YouTube".
+
 Since the project was built in Vue 2, the related libraries stopped supporting Vue 2 and gradually moved to Vue 3.
 In August, I upgraded the options API to Vue 3 and refactored the codebase into personal use blog. 
 Currently, the project moves to the composition API, which seamlessly improves the overall readability and maintainability.
