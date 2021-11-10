@@ -29,7 +29,7 @@ high-resolution preview pictures, the website responds slowly. Therefore, the fu
 - npm install -> install the tools and dependencies according to package.json.
 - apply a firebase key to be used in src/firebase/firebaseInit.js
 - register an account with an email for being an admin. See `App.vue` for how it works.
-- npm run server -> start the application in localhost.
+- npm run serve -> start the application in localhost.
 
 ## Special thanks
 Appreciate John and Traversy Media giving the code and tutorial for free.
