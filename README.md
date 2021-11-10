@@ -12,9 +12,11 @@ The project is still ongoing the refactor and debugging process as you might see
 - Using Vue 3 composition API with Vuex and Vue-router.
 - Disregarding the admin tab and its functionality.
 - Only the specific, unique registered email user can create a post. Visitors can only read the posts.
-- Optimize the logic when creating a new post; compress the image before uploading to firebase.
+- Optimize the logic when creating/editing a post; compress images before uploading to firebase.
 - Organize the states into sub-modules.
-- Use the markdown editor and renderer; customize the rendered mardown with CSS.
+- Use `Vuex-Router-Sync` to synchronize the router and the state
+  - after editing the post, the router will automatically redirect the user to the updated post page.
+- Use the markdown editor and renderer; customize the rendered markdown with CSS.
 - Slightly change the homepage layout.
 
 ## Plans
@@ -26,8 +28,8 @@ high-resolution preview pictures, the website responds slowly. Therefore, the fu
 - [ ] Re-organize the folder structure that the components are under the related view. The re-usable or utility components will still be in the same folder in `src/components`.
 
 ## To use the project
-- npm install -> install the tools and dependencies according to package.json.
-- apply a firebase key to be used in `src/firebase/firebaseInit.js.
+- npm install -> install the tools and dependencies according to `package.json`.
+- apply a firebase key to be used in `src/firebase/firebaseInit.js`.
 - register an account with an email for being an admin. See `App.vue` for how it works.
 - npm run serve -> start the application in localhost.
 
