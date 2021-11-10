@@ -29,7 +29,6 @@
     "uuid": "^8.3.2",
     "vue": "^3.1.5",
     "vue-loader": "^16.4.1",
-    "vue3-editor": "^0.1.0-alpha.3",
     "vue3-markdown-it": "^1.0.9",
     "vuex": "^4.0.2",
     "vuex-router-sync": "^6.0.0-rc.1"
