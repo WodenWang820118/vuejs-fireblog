@@ -155,7 +155,7 @@ export default {
      */
     async function imageHandler(event, insertImage, files) {
       console.log("[Trigger imageHandler]");
-      const contentPhoto = imageCompressionHandler(files[0]);
+      const contentPhoto = await imageCompressionHandler(files[0]);
       const fileName = contentPhoto.name;
       // const url = URL.createObjectURL(contentPhoto);
       const storageRef = firebase.storage().ref();
