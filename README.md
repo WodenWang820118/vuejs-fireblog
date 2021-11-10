@@ -17,6 +17,8 @@ high-resolution preview pictures, the website responds slowly. Therefore, the fu
 
 ## To use the project
 - npm install -> install the tools and dependencies according to package.json.
+- apply a firebase key to be used in src/firebase/firebaseInit.js
+- register ab account with an email for being an admin.
 - npm run server -> start the application in localhost.
 
 ## Special thanks
