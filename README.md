@@ -23,7 +23,7 @@ The project is still ongoing the refactor and debugging process as you might see
 I've been learning Vue 3 for a while, but it could be hard to look up specific components within a view. Further, when uploading
 high-resolution preview pictures, the website responds slowly. Therefore, the future goals:
 - [ ] I will incorporate Typescript, the prevalent language for better development collaboration, debugging, and maintenance.
-- [x] Lazy loading the Vuex store, improving the overall latency issue. -> compress images before uploading to firebase.
+- [x] <s>Lazy loading the Vuex store, improving the overall latency issue.</s> -> compress images before uploading to firebase.
 - [ ] Implementing the unit tests to ensure the code quality.
 - [ ] Re-organize the folder structure that the components are under the related view. The re-usable or utility components will still be in the same folder in `src/components`.
 
