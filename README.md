@@ -14,7 +14,7 @@ The project is still ongoing the refactor and debugging process as you might see
 - Only the specific, unique registered email user can create a post. Visitors can only read the posts.
 - Optimize the logic when creating a new post; compress the image before uploading to firebase.
 - Organize the states into sub-modules.
-- Use the markdown editor and renderer.
+- Use the markdown editor and renderer; customize the rendered mardown with CSS.
 - Slightly change the homepage layout.
 
 ## Plans
