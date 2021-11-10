@@ -20,3 +20,10 @@ https://stackoverflow.com/questions/61782533/vue-js-naming-conventions-children-
   - `store.dispatch("module/action", id)`
   - `store.commit("module/mutation", id)`
 - the computed properties cannot be reassigned.
+
+## Deployment
+- if deployed from the beginning, `npx firebase init`
+  - select the option `hosting` and without Github auto deployment.
+  - select `dist` as the folder to deploy.
+- `npm run build`  -> bundle the project into the `dist` folder.
+- `npx firebase deploy`
