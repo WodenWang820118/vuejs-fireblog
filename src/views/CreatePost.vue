@@ -56,10 +56,11 @@ import firebase from "firebase/app";
 import db from "../firebase/firebaseInit"; // the configuration data
 import "firebase/storage";
 import DOMPurify from "dompurify";
-
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { ref, computed } from "vue";
+import imageCompression from 'browser-image-compression';
+
 export default {
   name: "CreatePost",
   components: {
@@ -100,10 +101,6 @@ export default {
       togglePreview,
     };
 
-    // const getPost = () => {
-    //   store.dispatch("posts/getPost");
-    // };
-
     // route management
     const route = useRoute();
     const router = useRouter();
@@ -119,11 +116,30 @@ export default {
 
     // functions
 
+    async function imageCompressionHandler(imageFile) {
+      // options to compress the image
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true
+      }
+
+      try {
+        const compressedFile = await imageCompression(imageFile, options);
+        console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
+        console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+
+        return compressedFile;
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
     /**
      * create the filename state and the ObjectURL state
      */
     async function fileChange() {
-      coverPhoto.value = blogPhoto.value.files[0];
+      coverPhoto.value = await imageCompressionHandler(blogPhoto.value.files[0]);
       console.log(coverPhoto.value);
       const fileName = coverPhoto.value.name;
       filenameChange(fileName); // change the state
@@ -137,9 +153,9 @@ export default {
      * The image handler according to the v-md-editor, which is to upload the image
      * to the firebase
      */
-    function imageHandler(event, insertImage, files) {
+    async function imageHandler(event, insertImage, files) {
       console.log("[Trigger imageHandler]");
-      const contentPhoto = files[0];
+      const contentPhoto = imageCompressionHandler(files[0]);
       const fileName = contentPhoto.name;
       // const url = URL.createObjectURL(contentPhoto);
       const storageRef = firebase.storage().ref();
