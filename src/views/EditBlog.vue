@@ -58,6 +58,8 @@ import DOMPurify from "dompurify";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { ref, computed, onMounted } from "vue";
+import imageCompression from 'browser-image-compression';
+
 export default {
   name: "EditBlog",
   components: {
@@ -75,18 +77,18 @@ export default {
     // computed properties
     const storeComputed = {
       users: computed(() => store.getters["users/profileId"]),
-      blogHTML: computed(() => store.getters["blogs/blogHTML"]),
+      blogHTML: computed(() => store.getters["posts/blogHTML"]),
       blogCoverPhotoName: computed(
-        () => store.getters["blogs/blogCoverPhotoName"]
+        () => store.getters["posts/blogCoverPhotoName"]
       ),
-      blogPhotoFileURL: computed(() => store.getters["blogs/blogPhotoFileURL"]),
-      blogPhotoPreview: computed(() => store.getters["blogs/BlogPhotoPreview"]),
-      blogPosts: computed(() => store.getters["blogs/blogPosts"]),
+      blogPhotoFileURL: computed(() => store.getters["posts/blogPhotoFileURL"]),
+      blogPhotoPreview: computed(() => store.getters["posts/blogPhotoPreview"]),
+      blogPosts: computed(() => store.getters["posts/blogPosts"]),
     };
 
     // actions
-    const fileNameChange = (fileName) => {
-      return store.dispatch("posts/fileNameChange", fileName);
+    const filenameChange = (filename) => {
+      return store.dispatch("posts/filenameChange", filename);
     };
 
     const createFileURL = (fileName) => {
@@ -116,18 +118,39 @@ export default {
     const blogPhoto = ref(null);
 
     // functions
-    function fileChange() {
+    async function fileChange() {
       console.log("[There's a new photo]");
-      coverPhoto.value = blogPhoto.value.files[0];
+      // console.log(blogPhoto.value.files[0]);
+      coverPhoto.value = await imageCompressionHandler(blogPhoto.value.files[0]);
       const fileName = coverPhoto.value.name;
       console.log(`The fileName: ${fileName}`);
-      fileNameChange(fileName); // change the state
+      filenameChange(fileName); // change the state
       createFileURL(URL.createObjectURL(coverPhoto.value)); // create the URL
     }
 
-    function imageHandler(event, insertImage, files) {
+    async function imageCompressionHandler(imageFile) {
+      // options to compress the image
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true
+      }
+
+      try {
+        const compressedFile = await imageCompression(imageFile, options);
+        console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
+        console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+
+        return compressedFile;
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    async function imageHandler(event, insertImage, files) {
       console.log("[Trigger imageHandler]");
-      const contentPhoto = files[0];
+      let contentPhoto = files[0];
+      contentPhoto = await imageCompressionHandler(contentPhoto); // compress the photo
       const fileName = contentPhoto.name;
       const url = URL.createObjectURL(contentPhoto);
       // const contentPhotoName = this.contentPhoto.name
@@ -172,7 +195,6 @@ export default {
         if (coverPhoto.value) {
           loading.value = true;
           console.log("[All validations passed]");
-          // this.coverPhoto = this.$refs.blogPhoto.files[0]
           const timestamp = Date.now();
           const fileName = coverPhoto.value.name;
           const uniqueFileName = fileName + timestamp;
@@ -268,6 +290,7 @@ export default {
       ...storeComputed,
       error,
       errorMsg,
+      blogPhoto,
       coverPhoto,
       blogTitle,
       text,

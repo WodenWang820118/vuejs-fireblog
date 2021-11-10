@@ -122,7 +122,7 @@ export default {
     /**
      * create the filename state and the ObjectURL state
      */
-    function fileChange() {
+    async function fileChange() {
       coverPhoto.value = blogPhoto.value.files[0];
       console.log(coverPhoto.value);
       const fileName = coverPhoto.value.name;

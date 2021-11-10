@@ -13,7 +13,8 @@ I've been learning Vue 3 for a while, but it could be hard to look up specific c
 high-resolution preview pictures, the website responds slowly. Therefore, the future goals:
 1. I will incorporate Typescript, the prevalent language for better development collaboration, debugging, and maintenance.
 2. Lazy loading the Vuex store, improving the overall latency issue.
-3. I'll re-organize the folder structure that the components are under the related view. The re-usable or utility components will still be in the same folder in src/components.
+3. Start implementing the unit tests for ensuring the code quality.
+4. I'll re-organize the folder structure that the components are under the related view. The re-usable or utility components will still be in the same folder in src/components.
 
 ## To use the project
 - npm install -> install the tools and dependencies according to package.json.
