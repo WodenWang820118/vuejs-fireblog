@@ -34,27 +34,34 @@
 <script>
 import BlogPost from "@/components/BlogPost";
 import BlogCards from "@/components/BlogCards";
-import { mapGetters, mapState } from "vuex";
+import {ref, computed, inject} from "vue";
 export default {
   name: "Home",
   components: {
     BlogPost,
     BlogCards,
   },
-  data() {
+  setup() {
+    
+    // state management
+    const store = inject('store');
+
+    const user = computed(() => store.getters["users/user"]);
+    const blogPostsFeed = computed(() => store.getters["posts/blogPostsFeed"]);
+    const blogPostsCards = computed(() => store.getters["posts/blogPostsCards"]);
+
+    // variables
+    const welcomeScreen = ref({
+      title: "Welcome!",
+      blogPost:
+        "Weekly blog articles with all things programming including HTML, CSS, JavaScript and more. Register today to never miss a post!",
+      welcomeScreen: true,
+      photo: "coding",
+    })
+
     return {
-      welcomeScreen: {
-        title: "Welcome!",
-        blogPost:
-          "Weekly blog articles with all things programming including HTML, CSS, JavaScript and more. Register today to never miss a post!",
-        welcomeScreen: true,
-        photo: "coding",
-      },
-    };
-  },
-  computed: {
-    ...mapGetters("posts", ["blogPostsCards", "blogPostsFeed"]),
-    ...mapState("users", ["user"]),
+      user, blogPostsFeed, blogPostsCards, welcomeScreen
+    }
   },
 };
 </script>

@@ -1,4 +1,3 @@
-<!-- TODO: the 2 thing to work with -->
 <template>
   <footer>
     <div class="container">
@@ -55,11 +54,17 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+// import { mapState } from "vuex";
+import { inject, computed } from "vue";
 export default {
   name: "FooterVue",
-  computed: mapState("users", ["user"]),
-  methods: {},
+  setup() {
+    const store = inject("store");
+    const user = computed(() => store.getters["users/user"]);
+    return {
+      user
+    };
+  },
 };
 </script>
 

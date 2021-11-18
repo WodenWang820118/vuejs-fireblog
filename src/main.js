@@ -56,5 +56,5 @@ sync(store, router);
 createApp(App)
   .use(VMdEditor)
   .use(router)
-  .use(store)
+  .provide('store',store)
   .mount("#app");

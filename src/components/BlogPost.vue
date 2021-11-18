@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { computed, inject } from "vue";
 import marked from "marked";
 export default {
   name: "BlogPost",
@@ -50,8 +50,16 @@ export default {
       type: Object,
     },
   },
+  setup() {
+    // state management
+    const store = inject("store");
+    const user = computed(() => store.getters["users/user"]);
+
+    return {
+      user
+    }
+  },
   computed: {
-    ...mapState("users", ["user"]),
     compiledMarkdown: function () {
       return marked(this.post.blogHTML);
     },

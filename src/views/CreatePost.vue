@@ -56,9 +56,9 @@ import firebase from "firebase/app";
 import db from "../firebase/firebaseInit"; // the configuration data
 import "firebase/storage";
 import DOMPurify from "dompurify";
-import { useStore } from "vuex";
+// import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
-import { ref, computed } from "vue";
+import { ref, computed, inject } from "vue";
 import imageCompression from 'browser-image-compression';
 
 export default {
@@ -69,7 +69,7 @@ export default {
   },
   setup() {
     // state management
-    const store = useStore();
+    const store = inject('store');
     const profileId = computed(() => store.getters["users/profileId"]);
     const storeComputed = {
       blogHTML: computed(() => store.getters["posts/blogHTML"]),

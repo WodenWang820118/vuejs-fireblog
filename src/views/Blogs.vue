@@ -12,8 +12,8 @@
 
 <script>
 import BlogCards from "@/components/BlogCards";
-import { useStore } from "vuex";
-import { onBeforeUnmount, computed, ref, onBeforeMount } from "vue";
+// import { useStore } from "vuex";
+import { onBeforeUnmount, computed, ref, onBeforeMount, inject } from "vue";
 import firebase from "firebase/app"; // for using the firebase namespace
 import "firebase/auth"; // for initilize the auth() as a function -> reference: https://stackoverflow.com/questions/48592656/firebase-auth-is-not-a-function
 
@@ -25,7 +25,7 @@ export default {
   },
   setup() {
     // state management
-    const store = useStore();
+    const store = inject('store');
     const editPost = computed(() => store.getters["posts/editPost"]);
     
     // actions

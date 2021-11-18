@@ -56,8 +56,8 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
-import { ref, computed } from "vue";
+// import { useStore } from "vuex";
+import { ref, computed, inject } from "vue";
 import Modal from "@/components/Modal";
 export default {
   name: "Profile",
@@ -73,7 +73,7 @@ export default {
     const wishedUsername = ref("");
 
     // state management
-    const store = useStore();
+    const store = inject('store');
 
     const updFirstName = (firstName) => {
       return store.dispatch("users/updFirstName", firstName);
