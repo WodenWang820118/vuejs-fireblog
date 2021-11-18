@@ -13,8 +13,6 @@ module.exports = {
     plugins: [new Dotenv()],
   },
   chainWebpack: (config) => {
-    config
-      .performance.maxEntrypointSize(5000000)
-      .maxAssetSize(3000000);
+    config.performance.maxEntrypointSize(5000000).maxAssetSize(3000000);
   },
 };

@@ -31,8 +31,8 @@
 
 <script>
 import { useStore } from "vuex";
-import { useRouter } from "vue-router"
-import { computed } from "vue"
+import { useRouter } from "vue-router";
+import { computed } from "vue";
 export default {
   name: "BlogCards",
   props: {
@@ -46,30 +46,32 @@ export default {
 
     // actions
     const deletePostFromDatabase = (id) => {
-      return store.dispatch('posts/deletePostFromDatabase', id)
+      return store.dispatch("posts/deletePostFromDatabase", id);
     };
 
     // route management
     const router = useRouter();
 
-    function editBlog () {
+    function editBlog() {
       router.push({
-        name: 'EditBlog',
+        name: "EditBlog",
         params: {
-          blogId: props.card.blogId
-        }
-      })
-    };
+          blogId: props.card.blogId,
+        },
+      });
+    }
 
-    function deletePost () {
-      deletePostFromDatabase(props.card.blogId)
-    };
+    function deletePost() {
+      deletePostFromDatabase(props.card.blogId);
+    }
 
     return {
-      editPost: computed(() => { return store.getters['posts/editPost']}),
+      editPost: computed(() => {
+        return store.getters["posts/editPost"];
+      }),
       deletePost,
       editBlog,
-    }
+    };
   },
 };
 </script>

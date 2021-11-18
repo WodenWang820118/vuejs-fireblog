@@ -59,7 +59,7 @@ import DOMPurify from "dompurify";
 // import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { ref, computed, inject } from "vue";
-import imageCompression from 'browser-image-compression';
+import imageCompression from "browser-image-compression";
 
 export default {
   name: "CreatePost",
@@ -69,7 +69,7 @@ export default {
   },
   setup() {
     // state management
-    const store = inject('store');
+    const store = inject("store");
     const profileId = computed(() => store.getters["users/profileId"]);
     const storeComputed = {
       blogHTML: computed(() => store.getters["posts/blogHTML"]),
@@ -121,13 +121,18 @@ export default {
       const options = {
         maxSizeMB: 1,
         maxWidthOrHeight: 1920,
-        useWebWorker: true
-      }
+        useWebWorker: true,
+      };
 
       try {
         const compressedFile = await imageCompression(imageFile, options);
-        console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
-        console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+        console.log(
+          "compressedFile instanceof Blob",
+          compressedFile instanceof Blob
+        ); // true
+        console.log(
+          `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
+        ); // smaller than maxSizeMB
 
         return compressedFile;
       } catch (error) {
@@ -139,7 +144,9 @@ export default {
      * create the filename state and the ObjectURL state
      */
     async function fileChange() {
-      coverPhoto.value = await imageCompressionHandler(blogPhoto.value.files[0]);
+      coverPhoto.value = await imageCompressionHandler(
+        blogPhoto.value.files[0]
+      );
       console.log(coverPhoto.value);
       const fileName = coverPhoto.value.name;
       filenameChange(fileName); // change the state

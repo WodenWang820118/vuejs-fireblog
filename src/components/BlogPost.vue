@@ -56,8 +56,8 @@ export default {
     const user = computed(() => store.getters["users/user"]);
 
     return {
-      user
-    }
+      user,
+    };
   },
   computed: {
     compiledMarkdown: function () {

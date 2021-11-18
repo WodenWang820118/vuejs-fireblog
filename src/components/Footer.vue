@@ -62,7 +62,7 @@ export default {
     const store = inject("store");
     const user = computed(() => store.getters["users/user"]);
     return {
-      user
+      user,
     };
   },
 };

@@ -58,7 +58,7 @@ import DOMPurify from "dompurify";
 // import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { ref, computed, onMounted, inject } from "vue";
-import imageCompression from 'browser-image-compression';
+import imageCompression from "browser-image-compression";
 
 export default {
   name: "EditBlog",
@@ -121,7 +121,9 @@ export default {
     async function fileChange() {
       console.log("[There's a new photo]");
       // console.log(blogPhoto.value.files[0]);
-      coverPhoto.value = await imageCompressionHandler(blogPhoto.value.files[0]);
+      coverPhoto.value = await imageCompressionHandler(
+        blogPhoto.value.files[0]
+      );
       const fileName = coverPhoto.value.name;
       console.log(`The fileName: ${fileName}`);
       filenameChange(fileName); // change the state
@@ -133,13 +135,18 @@ export default {
       const options = {
         maxSizeMB: 1,
         maxWidthOrHeight: 1920,
-        useWebWorker: true
-      }
+        useWebWorker: true,
+      };
 
       try {
         const compressedFile = await imageCompression(imageFile, options);
-        console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
-        console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+        console.log(
+          "compressedFile instanceof Blob",
+          compressedFile instanceof Blob
+        ); // true
+        console.log(
+          `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
+        ); // smaller than maxSizeMB
 
         return compressedFile;
       } catch (error) {

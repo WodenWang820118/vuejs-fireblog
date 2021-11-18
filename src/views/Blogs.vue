@@ -17,7 +17,6 @@ import { onBeforeUnmount, computed, ref, onBeforeMount, inject } from "vue";
 import firebase from "firebase/app"; // for using the firebase namespace
 import "firebase/auth"; // for initilize the auth() as a function -> reference: https://stackoverflow.com/questions/48592656/firebase-auth-is-not-a-function
 
-
 export default {
   name: "Blogs",
   components: {
@@ -25,9 +24,9 @@ export default {
   },
   setup() {
     // state management
-    const store = inject('store');
+    const store = inject("store");
     const editPost = computed(() => store.getters["posts/editPost"]);
-    
+
     // actions
     const toggleEditPost = (edit) => {
       store.dispatch("posts/toggleEditPost", edit);
@@ -36,7 +35,6 @@ export default {
     // varibles
     const edit = ref(null); // for toggle purpose
     const admin = ref(false);
-
 
     /**
      * According to the state, reassign the local edit boolean to toggle the edit mode
@@ -47,7 +45,7 @@ export default {
       toggleEditPost(edit.value);
     }
 
-     /**
+    /**
      * The function check if the logged in user is admin or not
      */
     function checkUserState() {
@@ -57,21 +55,23 @@ export default {
         if (user) {
           // User is signed in, see docs for a list of available properties
           // https://firebase.google.com/docs/reference/js/firebase.User
-          let email = user.email
+          let email = user.email;
           // console.log(`The user email: ${email}`)
           // console.log(`The admin email: ${process.env.VUE_APP_ADMINEMAIL}`)
-          email === process.env.VUE_APP_ADMINEMAIL ? admin.value = true : admin.value = false
+          email === process.env.VUE_APP_ADMINEMAIL
+            ? (admin.value = true)
+            : (admin.value = false);
         } else {
-          admin.value = false
+          admin.value = false;
           console.log("There is no user using right now");
         }
       });
     }
-    
+
     onBeforeMount(() => {
       checkUserState();
     });
-    
+
     onBeforeUnmount(() => {
       // reset the state whenever leave the page
       toggleEditPost(false);

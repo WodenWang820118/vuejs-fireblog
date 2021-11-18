@@ -34,7 +34,7 @@
 <script>
 import BlogPost from "@/components/BlogPost";
 import BlogCards from "@/components/BlogCards";
-import {ref, computed, inject} from "vue";
+import { ref, computed, inject } from "vue";
 export default {
   name: "Home",
   components: {
@@ -42,13 +42,14 @@ export default {
     BlogCards,
   },
   setup() {
-    
     // state management
-    const store = inject('store');
+    const store = inject("store");
 
     const user = computed(() => store.getters["users/user"]);
     const blogPostsFeed = computed(() => store.getters["posts/blogPostsFeed"]);
-    const blogPostsCards = computed(() => store.getters["posts/blogPostsCards"]);
+    const blogPostsCards = computed(
+      () => store.getters["posts/blogPostsCards"]
+    );
 
     // variables
     const welcomeScreen = ref({
@@ -57,11 +58,14 @@ export default {
         "Weekly blog articles with all things programming including HTML, CSS, JavaScript and more. Register today to never miss a post!",
       welcomeScreen: true,
       photo: "coding",
-    })
+    });
 
     return {
-      user, blogPostsFeed, blogPostsCards, welcomeScreen
-    }
+      user,
+      blogPostsFeed,
+      blogPostsCards,
+      welcomeScreen,
+    };
   },
 };
 </script>

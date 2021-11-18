@@ -3,7 +3,7 @@
     <!-- provide the router view only if posts are loaded -->
     <div class="app" v-if="postLoaded">
       <Navigation :user_login="user_login" :admin="admin" />
-        <router-view />
+      <router-view />
       <Footer v-if="!user_login" />
     </div>
   </div>
@@ -24,20 +24,20 @@ export default {
   },
   setup() {
     // composition api, useStore with vuex
-    const store = inject('store')
+    const store = inject("store");
     // composition api, use ref
     const user_login = ref(null);
     const admin = ref(null);
     // dispatched, or committed method from store
     const getCurrentUser = () => {
-      return store.dispatch('users/getCurrentUser')
-    }
+      return store.dispatch("users/getCurrentUser");
+    };
     const mountUser = (user) => {
-      return store.dispatch('users/mountUser', user)
-    }
+      return store.dispatch("users/mountUser", user);
+    };
     const getPost = () => {
-      return store.dispatch('posts/getPost')
-    }
+      return store.dispatch("posts/getPost");
+    };
     // the functions used in this view
     /**
      * The function check if any user logged in
@@ -49,10 +49,12 @@ export default {
         if (user) {
           // User is signed in, see docs for a list of available properties
           // https://firebase.google.com/docs/reference/js/firebase.User
-          let email = user.email
+          let email = user.email;
           // console.log(`The user email: ${email}`)
           // console.log(`The admin email: ${process.env.VUE_APP_ADMINEMAIL}`)
-          email === process.env.VUE_APP_ADMINEMAIL ? admin.value = true : admin.value = false
+          email === process.env.VUE_APP_ADMINEMAIL
+            ? (admin.value = true)
+            : (admin.value = false);
           console.log("The user signed in!");
           user = mountUser(user);
           getCurrentUser();
@@ -72,9 +74,10 @@ export default {
     });
     // the return here returns the functions that are used in the template
     return {
-      profileEmail: computed(() => store.getters['users/profileEmail']),
-      postLoaded: computed(() => store.getters['posts/postLoaded']),
-      user_login, admin,
+      profileEmail: computed(() => store.getters["users/profileEmail"]),
+      postLoaded: computed(() => store.getters["posts/postLoaded"]),
+      user_login,
+      admin,
     };
   },
   watch: {

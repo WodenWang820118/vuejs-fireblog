@@ -73,7 +73,7 @@ export default {
     const wishedUsername = ref("");
 
     // state management
-    const store = inject('store');
+    const store = inject("store");
 
     const updFirstName = (firstName) => {
       return store.dispatch("users/updFirstName", firstName);
