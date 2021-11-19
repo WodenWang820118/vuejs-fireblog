@@ -1,49 +1,29 @@
 import { mount } from "@vue/test-utils";
 import { useRoute, useRouter } from "vue-router";
 import { createStore } from "vuex";
-const testing = require("@firebase/rules-unit-testing")
 
 import App from "@/App.vue";
 import Navigation from "@/components/Navigation.vue";
 import Footer from "@/components/Footer.vue";
 
-
-
 // firebase mocks
 // mock before any describe test, since jest will reorder the mocks before import
 // reference: https://stackoverflow.com/questions/52043886/how-do-you-mock-firebase-firestore-methods-using-jest
-// jest.mock('firebase/app', () => ({
-//   __esModule: true, // for the successful mocking
-//   default: {
-//     apps:[],
-//     initializeApp: () => jest.fn(),
-//     auth: () => jest.fn(()=>{
-//       return {
-//         onAuthStateChanged: jest.fn(()=>Promise.resolve()),
-//         currentUser: {
-//           sendEmailVerification: jest.fn(() => Promise.resolve(true))
-//         }
-//       }
-//     }) 
-//   }
-// }))
-
-// jest.mock('firebase/app', () => ({
-//   __esModule: true, // for the successful mocking
-//   default: {
-//     apps:[],
-//     initializeApp: () => jest.fn(),
-//     auth: () => jest.fn(()=>{
-//       return {
-//         onAuthStateChanged: jest.fn(()=>Promise.resolve()),
-//         currentUser: {
-//           sendEmailVerification: jest.fn(() => Promise.resolve(true))
-//         }
-//       }
-//     }) 
-//   }
-// }))
-
+jest.mock('firebase/app', () => ({
+  __esModule: true, // for the successful mocking
+  default: {
+    apps:[],
+    initializeApp: () => jest.fn(),
+    auth: jest.fn(()=>{
+      return {
+        onAuthStateChanged: jest.fn(()=>Promise.resolve(false)),
+        currentUser: {
+          sendEmailVerification: jest.fn(() => Promise.resolve(true))
+        }
+      }
+    }) 
+  }
+}))
 
 describe("App.vue", () => {
   // Vuex mocks
@@ -69,16 +49,24 @@ describe("App.vue", () => {
         mountUser: jest.fn()
       }
     })
-
   })
 
-  test('The Navigation component exists', () => {
-    const wrapper = mount(App, {
+  function factory() {
+    return mount(App, {
       global: {
-        plugins: [store,router],
+        plugins: [store, router]
       }
     })
-    expect(wrapper.find(Navigation).exists()).toBe(true)
+  }
+
+  test('The Navigation component exists', () => {
+    const wrapper = factory()
+    expect(wrapper.findComponent(Navigation)).toBeTruthy()
+  })
+
+  test('The Footer componets exist', () => {
+    const wrapper = factory()
+    expect(wrapper.findComponent(Footer)).toBeTruthy()
   })
 
   // test('App.vue called those functions', () => {
