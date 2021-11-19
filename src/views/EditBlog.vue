@@ -55,9 +55,9 @@ import firebase from "firebase/app";
 import db from "../firebase/firebaseInit"; // the configuration data
 import "firebase/storage";
 import DOMPurify from "dompurify";
-// import { useStore } from "vuex";
+import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
-import { ref, computed, onMounted, inject } from "vue";
+import { ref, computed, onMounted } from "vue";
 import imageCompression from "browser-image-compression";
 
 export default {
@@ -72,7 +72,7 @@ export default {
     const router = useRouter();
 
     // store management
-    const store = inject("store");
+    const store = useStore();
 
     // computed properties
     const storeComputed = {

@@ -12,8 +12,8 @@
 <script>
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { ref, onMounted, computed, inject, } from "vue";
-// import { useStore } from 'vuex'
+import { ref, onMounted, computed } from "vue";
+import { useStore } from 'vuex'
 import firebase from "firebase/app"; // for using the firebase namespace
 import "firebase/auth"; // for initilize the auth() as a function -> reference: https://stackoverflow.com/questions/48592656/firebase-auth-is-not-a-function
 export default {
@@ -24,7 +24,7 @@ export default {
   },
   setup() {
     // composition api, useStore with vuex
-    const store = inject("store");
+    const store = useStore();
     // composition api, use ref
     const user_login = ref(null);
     const admin = ref(null);

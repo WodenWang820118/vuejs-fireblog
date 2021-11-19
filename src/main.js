@@ -53,4 +53,4 @@ if (firebase.apps.length > 0 && db) {
 
 // reference: https://www.npmjs.com/package/vuex-router-sync
 sync(store, router);
-createApp(App).use(VMdEditor).use(router).provide("store", store).mount("#app");
+createApp(App).use(VMdEditor).use(router).use(store).mount("#app");

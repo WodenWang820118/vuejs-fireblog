@@ -34,7 +34,8 @@
 <script>
 import BlogPost from "@/components/BlogPost";
 import BlogCards from "@/components/BlogCards";
-import { ref, computed, inject } from "vue";
+import { useStore } from "vuex";
+import { ref, computed } from "vue";
 export default {
   name: "Home",
   components: {
@@ -43,7 +44,7 @@ export default {
   },
   setup() {
     // state management
-    const store = inject("store");
+    const store = useStore();
 
     const user = computed(() => store.getters["users/user"]);
     const blogPostsFeed = computed(() => store.getters["posts/blogPostsFeed"]);

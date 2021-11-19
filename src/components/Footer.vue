@@ -54,12 +54,12 @@
 </template>
 
 <script>
-// import { mapState } from "vuex";
-import { inject, computed } from "vue";
+import { useStore } from "vuex";
+import { computed } from "vue";
 export default {
   name: "FooterVue",
   setup() {
-    const store = inject("store");
+    const store = useStore();
     const user = computed(() => store.getters["users/user"]);
     return {
       user,

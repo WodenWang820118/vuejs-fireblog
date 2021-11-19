@@ -34,6 +34,7 @@
     "vuex-router-sync": "^6.0.0-rc.1"
   },
   "devDependencies": {
+    "@testing-library/vue": "^6.4.2",
     "@types/markdown-it": "^12.2.3",
     "@vue/cli-plugin-babel": "~4.5.15",
     "@vue/cli-plugin-eslint": "~4.5.15",

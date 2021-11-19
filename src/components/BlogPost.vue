@@ -39,7 +39,8 @@
 </template>
 
 <script>
-import { computed, inject } from "vue";
+import { computed } from "vue";
+import { useStore } from "vuex";
 import marked from "marked";
 export default {
   name: "BlogPost",
@@ -52,7 +53,7 @@ export default {
   },
   setup() {
     // state management
-    const store = inject("store");
+    const store = useStore();
     const user = computed(() => store.getters["users/user"]);
 
     return {

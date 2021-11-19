@@ -13,6 +13,6 @@ module.exports = {
     plugins: [new Dotenv()],
   },
   chainWebpack: (config) => {
-    config.performance.maxEntrypointSize(5000000).maxAssetSize(3000000);
+    config.resolve.alias.set("vue$", path.resolve(__dirname, "node_modules/vue"));
   },
 };
