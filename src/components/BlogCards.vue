@@ -30,9 +30,9 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
+// import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import { computed } from "vue";
+import { computed, inject } from "vue";
 export default {
   name: "BlogCards",
   props: {
@@ -42,7 +42,7 @@ export default {
   },
   setup(props) {
     // state managemnet
-    const store = useStore();
+    const store = inject("store");
 
     // actions
     const deletePostFromDatabase = (id) => {

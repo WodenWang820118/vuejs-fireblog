@@ -27,3 +27,8 @@ https://stackoverflow.com/questions/61782533/vue-js-naming-conventions-children-
   - select `dist` as the target folder to deploy.
 - `npm run build`  -> bundle the project into the `dist` folder.
 - `npx firebase deploy`
+
+## Testing
+- using `vue-jest`, `unit-jest`
+- use `npm run test:unit --verbose -- --watchAll` to keep watching the testing changes.
+- how to deal with the components that use store, which is not recognized by the testing?

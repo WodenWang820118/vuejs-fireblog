@@ -89,15 +89,15 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
-import { ref, computed } from "vue";
+// import { useStore } from "vuex";
+import { ref, computed, inject } from "vue";
 import firebase from "firebase/app"; // for using the firebase namespace
 import "firebase/auth"; // for initilize the auth() as a function -> reference: https://stackoverflow.com/questions/48592656/firebase-auth-is-not-a-function
 export default {
   name: "Navigation",
   setup() {
     // get the store
-    const store = useStore();
+    const store = inject("store");
 
     // the variables for adjusting the responsiiveness
     const profileMenu = ref(false);
