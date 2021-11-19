@@ -42,17 +42,32 @@ const router = createRouter({
 })
 
 const createVuexStore = () => {
-  return createStore({
-    getters:{
+  let users = {
+    actions: {
+      getCurrentUser: jest.fn(),
+      mountUser: jest.fn()
+    },
+    namespaced: true,
+  }
+
+  let posts = {
+    getters: {
       profileEmail: () => "",
       postLoaded: () => false,
     },
-    actions:{
+    actions: {
       getPost: jest.fn(),
-      getCurrentUser: jest.fn(),
-      mountUser: jest.fn()
+    },
+    namespaced: true,
+  }
+
+  const store = createStore({
+    modules: {
+      users,
+      posts
     }
   })
+  return store
 }
 
 describe("App.vue", () => {
