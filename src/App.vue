@@ -66,10 +66,11 @@ export default {
       });
     }
     // at setup phase, get the posts before mounting; otherwise, looks slow
-    getPost();
+    
     // define the behaviors of the view
     // mount the user
     onMounted(() => {
+      getPost();
       checkUserState();
     });
     // the return here returns the functions that are used in the template
@@ -77,7 +78,7 @@ export default {
       profileEmail: computed(() => store.getters["users/profileEmail"]),
       postLoaded: computed(() => store.getters["posts/postLoaded"]),
       user_login,
-      admin,
+      admin, getPost
     };
   },
   watch: {
