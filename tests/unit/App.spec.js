@@ -147,7 +147,7 @@ describe("App.vue", () => {
 
   test('getPost function called when mounting the DOM; store correctly receives the data; the app rendered'
     , async () => {
-    
+    // TODO: use mock-firebase to mock the firestore behavior to give the fake data to testing
     const wrapper = await factory() // the wrapper already called the getPost function
     const store = wrapper.vm.$store
 

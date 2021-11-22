@@ -32,3 +32,6 @@ https://stackoverflow.com/questions/61782533/vue-js-naming-conventions-children-
 - using `vue-jest`, `unit-jest`
 - use `npm run test:unit --verbose -- --watchAll` to keep watching the testing changes.
 - how to deal with the components that use store, which is not recognized by the testing?
+  - A: Mock the module or bulild the router and store manually.
+- the mocked functions are simulating the store and the router, but instead, they don't
+trigger the actual functions.
