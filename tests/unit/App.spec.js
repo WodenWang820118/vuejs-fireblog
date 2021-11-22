@@ -1,6 +1,7 @@
 import { mount, shallowMount } from "@vue/test-utils";
 import { createRouter, createWebHistory } from 'vue-router'
 import { createStore } from "vuex";
+import { computed } from "vue";
 
 import routesMock from './routes'
 
@@ -53,22 +54,39 @@ const createVuexStore = () => {
   let posts = {
     state:{
       postLoaded: null,
+      blogPosts: [],
     },
     getters: {
       profileEmail: jest.fn(() => "") ,
       postLoaded: jest.fn((state) => state.postLoaded),
+      blogPosts: jest.fn((state) => state.blogPosts),
     },
     actions: {
-      getPost: jest.fn((state)=>Promise.resolve(
-        {
-          blogId: "1",
-          blogHTML: "Hello World",
-          blogCoverPhoto: null,
-          blogTitle: "Title",
-          blogDate: null,
-          blogCoverPhotoName: "empty",
-        },state.postLoaded = true
-      )),
+      getPost: jest.fn(({ commit }) => {
+        const postLoaded = true;
+        const blogPosts = [
+          {
+            blogId: "1",
+            blogHTML: "Hello World",
+            blogCoverPhoto: null,
+            blogTitle: "Title",
+            blogDate: null,
+            blogCoverPhotoName: "empty",
+          }
+        ]
+        commit("setPost", blogPosts);
+        commit("setPostLoaded", postLoaded);
+      }),
+    },
+    mutations: {
+      setPost: jest.fn((state, payload) => {
+        payload.forEach((post) => {
+          state.blogPosts.push(post);
+        })
+      }),
+      setPostLoaded: jest.fn((state, payload) => {
+        state.postLoaded = payload;
+      })
     },
     namespaced: true,
   }
@@ -127,20 +145,15 @@ describe("App.vue", () => {
     expect(postLoaded).toBe(null)
   })
 
-  test('After calling the getPost function, postLoaded should be true', async () => {
-    // create a new store and dispatch the getPost action
-    const store = createVuexStore()
-    let postLoaded = store.getters["posts/postLoaded"]
-
-    const wrapper = await factory()
+  test('getPost function called when mounting the DOM; store correctly receives the data; the app rendered'
+    , async () => {
     
-    console.log(wrapper.vm.getPost())
-    await wrapper.vm.$nextTick()
+    const wrapper = await factory() // the wrapper already called the getPost function
+    const store = wrapper.vm.$store
 
-    wrapper.vm.getPost()
-    console.log(wrapper.vm.postLoaded)
+    const blogPosts = store.getters['posts/blogPosts']
 
-    // expect(getPostSpy).toBeCalled()
-    // expect(postLoaded).toBe(true)
+    expect(blogPosts.length).toBe(1)
+    expect(wrapper.vm.postLoaded).toBe(true)
   })
 })
