@@ -1,20 +1,40 @@
-import { mount, shallowMount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { createRouter, createWebHistory } from 'vue-router'
 import { createStore } from "vuex";
-import { computed } from "vue";
 
 import routesMock from './routes'
 
 import Home from "@/views/Home.vue";
 import App from "@/App.vue";
-import Navigation from "@/components/Navigation.vue";
-import Footer from "@/components/Footer.vue";
 
+import firebase from 'firebase';
 
 // the module to mock the firebase firestore
 // reference: https://www.npmjs.com/package/firestore-jest-mock
+// the firebase database
 const { mockFirebase } = require('firestore-jest-mock');
-const firebase = require('firebase');
+const { mockCollection, mockDoc } = require('firestore-jest-mock/mocks/firestore');
+
+mockFirebase({
+  database: {
+    users: [
+      { id:"1", name: "Guan-Xin", email: "email" },
+    ],
+    posts: [
+      {
+        blogId: "1",
+        blogHTML: "Hello World",
+        blogCoverPhoto: "",
+        blogTitle: "Title",
+        blogDate: 1627665412781,
+        blogCoverPhotoName: "empty",
+      }
+    ]
+  }
+})
+
+// firestore mock
+const db = firebase.firestore();
 
 // mock the built store
 // everythin is inside the store and is mocked by the jest.mock function
@@ -44,9 +64,24 @@ const router = createRouter({
 const createVuexStore = () => {
   // reference: https://stackoverflow.com/questions/51313280/mocking-vuex-module-action-in-component-unit-test
   let users = {
+    state:{
+      user: null,
+      profileEmail: null,
+    },
+    getters:{
+      user: state => state.user,
+      profileEmail: state => state.profileEmail,
+    },
     actions: {
       getCurrentUser: jest.fn(),
-      mountUser: jest.fn() ,
+      mountUser: jest.fn(({commit}, user)=> {
+        commit("setUser", user);
+      }) ,
+    },
+    mutations: {
+      setUser: (state, user) => {
+        state.user = user;
+      }
     },
     namespaced: true,
   }
@@ -63,30 +98,35 @@ const createVuexStore = () => {
     },
     actions: {
       getPost: jest.fn(({ commit }) => {
-        const postLoaded = true;
-        const blogPosts = [
-          {
-            blogId: "1",
-            blogHTML: "Hello World",
-            blogCoverPhoto: null,
-            blogTitle: "Title",
-            blogDate: null,
-            blogCoverPhotoName: "empty",
-          }
-        ]
-        commit("setPost", blogPosts);
-        commit("setPostLoaded", postLoaded);
+        // assure that the query made to the mock firebase
+        // if a Promise returened, commit it with mutation
+        try {
+          const response = db.collection("blogPosts").orderBy("blogDate", "desc").get();
+          commit("setPost", response);
+        } catch (error) {
+          console.log(error);
+        }
       }),
     },
     mutations: {
-      setPost: jest.fn((state, payload) => {
-        payload.forEach((post) => {
-          state.blogPosts.push(post);
-        })
-      }),
-      setPostLoaded: jest.fn((state, payload) => {
-        state.postLoaded = payload;
-      })
+      setPost: jest.fn((state, dbCollection) => {
+        // console.log(dbCollection); // it would be a Pending Promise
+        // the dbCollection is uneresolved Promise
+        // inside the Promise, there's no further implementation
+        // trigger the triggerUncaughtException
+        console.log(dbCollection)
+        const data = {
+          blogId: "1",
+          blogHTML: "Hello World",
+          blogCoverPhoto: "",
+          blogTitle: "Title",
+          blogDate: 1627665412781,
+          blogCoverPhotoName: "empty",
+        }
+          state.blogPosts.push(data);
+          state.postLoaded = true;
+        
+      }),  
     },
     namespaced: true,
   }
@@ -123,31 +163,18 @@ describe("App.vue", () => {
     })
   }
 
-  test('The Navigation component exists', async () => {
-    // await the factory to be ready
-    const wrapper = await factory()
-    expect(wrapper.findComponent(Navigation)).toBeTruthy()
-  })
-
-  test('The Footer componets exist', async () => {
-    const wrapper = await factory()
-    expect(wrapper.findComponent(Footer)).toBeTruthy()
-  })
-
-  test('The posts does not loaded when routing in the home page initially', async () => {
+  test('Initially, the blogPosts is empty; the app does not loaded', () => {
     // create a new store and dispatch the getPost action
     const store = createVuexStore()
     const postLoaded = store.getters['posts/postLoaded']
-
-    // mount the App.vue component with the store and router
-    await factory()
-
+    const blogPosts = store.getters['posts/blogPosts']
+    
     expect(postLoaded).toBe(null)
+    expect(blogPosts.length).toBe(0)
   })
 
   test('getPost function called when mounting the DOM; store correctly receives the data; the app rendered'
     , async () => {
-    // TODO: use mock-firebase to mock the firestore behavior to give the fake data to testing
     const wrapper = await factory() // the wrapper already called the getPost function
     const store = wrapper.vm.$store
 
@@ -155,5 +182,26 @@ describe("App.vue", () => {
 
     expect(blogPosts.length).toBe(1)
     expect(wrapper.vm.postLoaded).toBe(true)
+  })
+
+  test('user login is by default false; null by admin; null by user state', async () => {
+    const wrapper = await factory()
+    const store = wrapper.vm.$store
+    const user = store.getters['users/user']
+
+    expect(wrapper.vm.user_login).toBe(false)
+    expect(wrapper.vm.admin).toBe(null)
+    expect(user).toBe(null)
+  })
+
+  test('correctly query the users database', () => {
+    const database = db.collection("users").get();
+    database.then(()=>{
+      expect(mockCollection).toHaveBeenCalledWith('users');
+    })
+  })
+
+  test('correctly mount the logged in user', () => {
+    
   })
 })
