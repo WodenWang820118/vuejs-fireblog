@@ -201,6 +201,7 @@ describe("App.vue", () => {
     })
   })
 
+  // TODO: test the user login
   test('correctly mount the logged in user', () => {
     
   })
