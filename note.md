@@ -25,6 +25,7 @@ https://stackoverflow.com/questions/61782533/vue-js-naming-conventions-children-
 - if deployed from the beginning, `npx firebase init`
   - select the option `hosting` and without Github auto-deployment.
   - select `dist` as the target folder to deploy.
+- `npx firebase login` if haven't logged in yet.
 - `npm run build`  -> bundle the project into the `dist` folder.
 - `npx firebase deploy`
 
